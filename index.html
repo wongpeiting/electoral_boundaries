@@ -708,13 +708,34 @@
             .chart-section { padding: 2rem 1.5rem 1rem; }
             .chart-title { font-size: 1.15rem; }
         }
+
+        /* ── Mobile ── */
+        @media (max-width: 480px) {
+            header { padding: 2.5rem 1.5rem 0.5rem; }
+            .prose { padding: 1.5rem; }
+            .legend-row { padding: 0.75rem 1.5rem; }
+            .map-header { padding: 1.5rem 1.5rem 0.25rem; }
+            .methodology-box { padding: 0 1.5rem; }
+            .footnote { padding: 1rem 1.5rem; }
+            .chart-section { padding: 1.5rem 1rem 1rem; }
+
+            .map-wrapper { min-height: 350px; height: 50vh; }
+
+            .info-panel { min-width: 200px; max-width: 260px; left: 1rem; bottom: 1rem; }
+
+            .blob-cell { width: 160px; }
+            .blob-grid { gap: 0.2rem 0.4rem; }
+            .blob-label { font-size: 0.55rem; }
+            .chart-annotations { display: none; }
+            .desktop-only { display: none; }
+        }
     </style>
 </head>
 <body>
     <div class="blob-scene">
         <div class="blob-stage" id="blob-stage">
             <div class="blob-grid" id="blob-grid"></div>
-            <p class="blob-intro-text" id="blob-intro-text">On the map, Fernvale stays still.<br>But its electoral boundaries do not.</p>
+            <p class="blob-intro-text" id="blob-intro-text">On the map, Fernvale stays still.<br class="desktop-only">But its electoral boundaries do not.</p>
             <p class="blob-intro-text2" id="blob-intro-text2">It was bounced between Ang Mo Kio GRC and Sengkang West SMC before it was carved out as part of Jalan Kayu SMC, where 2025's tightest fight went down.</p>
             <p class="blob-tagline" id="blob-tagline">And it isn't the only one.</p>
             <div class="scroll-cue" aria-hidden="true"></div>
@@ -974,6 +995,9 @@
 
         });
 
+        // ── Annotations (hidden on mobile via CSS) ──
+        var annGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        annGroup.setAttribute('class', 'chart-annotations');
         // ── Annotation: 2011 bumper year ──
         // Text to the LEFT of the dots, same vertical level, horizontal line to 34.4% label
         var annCy = mt + 0 * rowH + rowH / 2;
@@ -991,7 +1015,7 @@
         annText.setAttribute('fill', '#aaa');
         annText.setAttribute('font-style', 'italic');
         annText.textContent = 'Nearly equal churn as large GRCs';
-        svg.appendChild(annText);
+        annGroup.appendChild(annText);
 
         var annText2 = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         annText2.setAttribute('x', annTextX); annText2.setAttribute('y', annCy + 8);
@@ -1001,7 +1025,7 @@
         annText2.setAttribute('fill', '#aaa');
         annText2.setAttribute('font-style', 'italic');
         annText2.textContent = 'got resized from 6 to 4\u20135 member';
-        svg.appendChild(annText2);
+        annGroup.appendChild(annText2);
 
         // Horizontal line from text to the "34.4%" label
         var annLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
@@ -1009,7 +1033,7 @@
         annLine.setAttribute('y1', annCy); annLine.setAttribute('y2', annCy - 12);
         annLine.setAttribute('stroke', '#ccc');
         annLine.setAttribute('stroke-width', 0.7);
-        svg.appendChild(annLine);
+        annGroup.appendChild(annLine);
 
         // ── Annotation: 2020 widest gap ──
         var ann2Cy = mt + 2 * rowH + rowH / 2;
@@ -1023,7 +1047,7 @@
         ann2Text.setAttribute('fill', '#aaa');
         ann2Text.setAttribute('font-style', 'italic');
         ann2Text.textContent = 'Fengshan, Punggol East & Sengkang West';
-        svg.appendChild(ann2Text);
+        annGroup.appendChild(ann2Text);
 
         var ann2Text2 = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         ann2Text2.setAttribute('x', ann2TextX); ann2Text2.setAttribute('y', ann2Cy - 9);
@@ -1033,15 +1057,16 @@
         ann2Text2.setAttribute('fill', '#aaa');
         ann2Text2.setAttribute('font-style', 'italic');
         ann2Text2.textContent = 'SMCs \u2014 all WP-contested in 2015 \u2014 dissolved';
-        svg.appendChild(ann2Text2);
+        annGroup.appendChild(ann2Text2);
 
         var ann2Line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
         ann2Line.setAttribute('x1', x(33.0) + 16); ann2Line.setAttribute('x2', ann2TextX - 3);
         ann2Line.setAttribute('y1', ann2Cy - 15); ann2Line.setAttribute('y2', ann2Cy - 24);
         ann2Line.setAttribute('stroke', '#ccc');
         ann2Line.setAttribute('stroke-width', 0.7);
-        svg.appendChild(ann2Line);
+        annGroup.appendChild(ann2Line);
 
+        svg.appendChild(annGroup);
 
         document.getElementById('churn-dumbbell-wrap').appendChild(svg);
     })();
@@ -1507,7 +1532,7 @@
             cell.appendChild(svg);
             grid.appendChild(cell);
 
-            // CSS @keyframes — 12s morph cycle (longer transitions, shorter holds)
+            // CSS @keyframes for browsers that support d property animation
             var kf = '@keyframes morph-' + id + ' {\n';
             var stops = [[0, 6], [20, 26], [40, 46], [60, 66], [80, 86]];
             area.shapes.forEach(function(s, i) {
@@ -1520,6 +1545,49 @@
 
         styleEl.textContent = css;
         document.head.appendChild(styleEl);
+
+        // ── JS fallback for browsers that don't support CSS d animation ──
+        (function() {
+            // Test if CSS d animation works
+            var testEl = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            testEl.style.animation = 'none';
+            testEl.style.d = 'path("M0,0")';
+            var supportsD = testEl.style.d !== '';
+            if (supportsD) {
+                // Also check if animation actually applies — some browsers accept the property but don't animate it
+                var firstBlob = document.getElementById('blob-' + order[0]);
+                if (firstBlob) {
+                    var computed = getComputedStyle(firstBlob);
+                    // If animationName resolves, CSS is working
+                    if (computed.animationName && computed.animationName !== 'none') return;
+                }
+            }
+
+            // Fallback: cycle d attribute with JS
+            var HOLD = 1200, TRANSITION = 400, STEPS = 20;
+            order.forEach(function(id) {
+                var area = areaMap[id];
+                if (!area) return;
+                var el = document.getElementById('blob-' + id);
+                if (!el) return;
+                // Remove CSS animation so it doesn't conflict
+                el.style.animation = 'none';
+                var paths = area.shapes.map(function(s) { return s.path; });
+                var idx = 0;
+
+                function nextShape() {
+                    var from = paths[idx];
+                    var to = paths[(idx + 1) % paths.length];
+                    // Quick swap — no interpolation needed, just step through
+                    setTimeout(function() {
+                        el.setAttribute('d', to);
+                        idx = (idx + 1) % paths.length;
+                        setTimeout(nextShape, HOLD);
+                    }, TRANSITION);
+                }
+                setTimeout(function() { nextShape(); }, HOLD + Math.random() * 500);
+            });
+        })();
 
         // ── Hero positioning: scale Fernvale cell to fill stage ──
         var heroCell = grid.querySelector('.blob-cell--hero');
