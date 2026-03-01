@@ -418,7 +418,7 @@
 
         /* ── Blob scene (scroll-driven opener) ── */
         .blob-scene {
-            height: 700vh;
+            height: 400vh;
             position: relative;
         }
 
@@ -1666,16 +1666,16 @@
             if (scrollRoom <= 0) return;
             var progress = Math.max(0, Math.min(1, -rect.top / scrollRoom));
 
-            // State 1a: first intro text (8%–30%)
-            if (progress > 0.08 && progress < 0.30) stage.classList.add('state-intro');
+            // State 1a: first intro text (5%–35%)
+            if (progress > 0.05 && progress < 0.35) stage.classList.add('state-intro');
             else stage.classList.remove('state-intro');
 
-            // State 1b: second intro text (30%–52%)
-            if (progress > 0.30 && progress < 0.52) stage.classList.add('state-intro2');
+            // State 1b: second intro text (35%–65%)
+            if (progress > 0.35 && progress < 0.65) stage.classList.add('state-intro2');
             else stage.classList.remove('state-intro2');
 
-            // State 2: grid (52%+) — hero shrinks to grid cell, others appear
-            var isGrid = progress > 0.52;
+            // State 2: grid (65%+) — hero shrinks to grid cell, others appear
+            var isGrid = progress > 0.65;
             if (isGrid && !wasGrid) {
                 stage.classList.add('state-grid');
                 heroCell.style.transform = 'none';
