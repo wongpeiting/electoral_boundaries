@@ -1474,8 +1474,6 @@
         if (!grid || !stage || !scene || typeof blobData === 'undefined') return;
 
         var svgNS = 'http://www.w3.org/2000/svg';
-        var styleEl = document.createElement('style');
-        var css = '';
 
         var areaMap = {};
         blobData.areas.forEach(function(a) { areaMap[a.id] = a; });
@@ -1532,62 +1530,30 @@
             cell.appendChild(svg);
             grid.appendChild(cell);
 
-            // CSS @keyframes for browsers that support d property animation
-            var kf = '@keyframes morph-' + id + ' {\n';
-            var stops = [[0, 6], [20, 26], [40, 46], [60, 66], [80, 86]];
-            area.shapes.forEach(function(s, i) {
-                kf += stops[i][0] + '%,' + stops[i][1] + '%{d:path("' + s.path + '")}\n';
-            });
-            kf += '}\n';
-            css += kf;
-            css += '#blob-' + id + '{animation:morph-' + id + ' 8s ease-in-out infinite}\n';
+            // Store paths for JS animation
+            area._paths = area.shapes.map(function(s) { return s.path; });
         });
 
-        styleEl.textContent = css;
-        document.head.appendChild(styleEl);
+        // ── JS-driven morph: setAttribute('d') works everywhere ──
+        // CSS d animation is unreliable (Safari < 17.5, Firefox < 128 don't animate it)
+        // so we drive it with JS universally — no detection needed.
+        var HOLD = 1400, SWAP = 200;
+        order.forEach(function(id) {
+            var area = areaMap[id];
+            if (!area || !area._paths) return;
+            var el = document.getElementById('blob-' + id);
+            if (!el) return;
+            var paths = area._paths;
+            var idx = 0;
 
-        // ── JS fallback for browsers that don't support CSS d animation ──
-        (function() {
-            // Test if CSS d animation works
-            var testEl = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-            testEl.style.animation = 'none';
-            testEl.style.d = 'path("M0,0")';
-            var supportsD = testEl.style.d !== '';
-            if (supportsD) {
-                // Also check if animation actually applies — some browsers accept the property but don't animate it
-                var firstBlob = document.getElementById('blob-' + order[0]);
-                if (firstBlob) {
-                    var computed = getComputedStyle(firstBlob);
-                    // If animationName resolves, CSS is working
-                    if (computed.animationName && computed.animationName !== 'none') return;
-                }
+            function cycle() {
+                idx = (idx + 1) % paths.length;
+                el.setAttribute('d', paths[idx]);
+                setTimeout(cycle, HOLD);
             }
-
-            // Fallback: cycle d attribute with JS
-            var HOLD = 1200, TRANSITION = 400, STEPS = 20;
-            order.forEach(function(id) {
-                var area = areaMap[id];
-                if (!area) return;
-                var el = document.getElementById('blob-' + id);
-                if (!el) return;
-                // Remove CSS animation so it doesn't conflict
-                el.style.animation = 'none';
-                var paths = area.shapes.map(function(s) { return s.path; });
-                var idx = 0;
-
-                function nextShape() {
-                    var from = paths[idx];
-                    var to = paths[(idx + 1) % paths.length];
-                    // Quick swap — no interpolation needed, just step through
-                    setTimeout(function() {
-                        el.setAttribute('d', to);
-                        idx = (idx + 1) % paths.length;
-                        setTimeout(nextShape, HOLD);
-                    }, TRANSITION);
-                }
-                setTimeout(function() { nextShape(); }, HOLD + Math.random() * 500);
-            });
-        })();
+            // Stagger start so blobs don't all flip in unison
+            setTimeout(cycle, HOLD + Math.floor(Math.random() * 800));
+        });
 
         // ── Hero positioning: scale Fernvale cell to fill stage ──
         var heroCell = grid.querySelector('.blob-cell--hero');
