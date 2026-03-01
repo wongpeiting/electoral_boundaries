@@ -2,7 +2,7 @@
 
 Each time electoral boundaries are reviewed ahead of a general election in Singapore, we are reminded that there is a number of residents who can live in the same flat for years and still find themselves voting under a different constituency name every other election.
 
-I wanted to know where residents feel this most, so I mapped how electoral boundaries have shifted across five general elections from 2006 to 2025, and compared those changes with where the opposition has contested. [Here] (https://wongpeiting.github.io/electoral_boundaries/) is the resultant article.
+I wanted to know where residents feel this most, so I mapped how electoral boundaries have shifted across five general elections from 2006 to 2025, and compared those changes with where the opposition has contested. [Here](https://wongpeiting.github.io/electoral_boundaries/) is the resultant article.
 
 ### Project takeaways
 
@@ -14,7 +14,7 @@ Given that algorithms class is in full swing, the project also pushed me to thin
 
 ## Data sources
 
-Electoral boundary shapefiles for 2006, 2011, 2015, 2020, and 2025, which represent the official gazetted boundaries for the general elections in those years, were obtained from [Elections Department, data.gov.sg](https://data.gov.sg/datasets?agencies=Elections%20Department%20(ELD)).
+Electoral boundary shapefiles for 2006, 2011, 2015, 2020, and 2025, which represent the official gazetted boundaries for the general elections in those years, were obtained from [Elections Department](https://data.gov.sg/datasets?agencies=Elections%20Department%20(ELD)).
 
 ## Methodology
 
