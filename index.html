@@ -900,8 +900,8 @@
         var isMobile = window.innerWidth <= 480;
         var W = isMobile ? 340 : 860, H = isMobile ? 380 : 300;
         var ml = isMobile ? 48 : 70, mr = isMobile ? 8 : 30, mt = 12, mb = 15;
-        var cycleFontSize = isMobile ? 16 : 14;
-        var labelFontSize = isMobile ? 14 : 11;
+        var cycleFontSize = isMobile ? 16 : 16;
+        var labelFontSize = isMobile ? 14 : 14;
         var dotR = isMobile ? 9 : 6;
         var barH = 8;
         var minSep = isMobile ? 36 : 46;
@@ -1043,7 +1043,7 @@
         annText.setAttribute('x', annTextX); annText.setAttribute('y', annCy - 5);
         annText.setAttribute('text-anchor', 'end');
         annText.setAttribute('font-family', 'IBM Plex Sans, sans-serif');
-        annText.setAttribute('font-size', '12');
+        annText.setAttribute('font-size', '14');
         annText.setAttribute('fill', '#aaa');
         annText.setAttribute('font-style', 'italic');
         annText.textContent = 'Nearly equal churn as large GRCs';
@@ -1053,7 +1053,7 @@
         annText2.setAttribute('x', annTextX); annText2.setAttribute('y', annCy + 10);
         annText2.setAttribute('text-anchor', 'end');
         annText2.setAttribute('font-family', 'IBM Plex Sans, sans-serif');
-        annText2.setAttribute('font-size', '12');
+        annText2.setAttribute('font-size', '14');
         annText2.setAttribute('fill', '#aaa');
         annText2.setAttribute('font-style', 'italic');
         annText2.textContent = 'got resized from 6 to 4\u20135 member';
@@ -1086,7 +1086,7 @@
             t.setAttribute('y', ann2TextBottomY - (2 - i) * ann2LineH + 32);
             t.setAttribute('text-anchor', 'start');
             t.setAttribute('font-family', 'IBM Plex Sans, sans-serif');
-            t.setAttribute('font-size', '12');
+            t.setAttribute('font-size', '14');
             t.setAttribute('fill', '#aaa');
             t.setAttribute('font-style', 'italic');
             t.textContent = txt;
