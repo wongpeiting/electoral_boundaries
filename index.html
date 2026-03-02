@@ -239,6 +239,22 @@
 
         .info-panel.visible { display: block; }
 
+        .info-close {
+            display: none;
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            width: 28px;
+            height: 28px;
+            border: none;
+            background: none;
+            font-size: 1.2rem;
+            color: var(--ink-muted);
+            cursor: inherit;
+            line-height: 1;
+            padding: 0;
+        }
+
         .info-natural {
             font-size: 0.8rem;
             font-weight: 400;
@@ -721,7 +737,8 @@
 
             .map-wrapper { min-height: 350px; height: 50vh; }
 
-            .info-panel { min-width: 200px; max-width: 260px; left: 1rem; bottom: 1rem; }
+            .info-panel { min-width: 200px; max-width: 260px; left: 1rem; bottom: 1rem; padding-right: 2rem; }
+            .info-close { display: block; }
 
             .blob-cell { width: 160px; }
             .blob-grid { gap: 0.2rem 0.4rem; }
@@ -783,6 +800,7 @@
         <div id="map"></div>
 
         <div class="info-panel" id="info-panel">
+            <button class="info-close" id="info-close" aria-label="Close">&times;</button>
             <div class="info-district" id="info-district"></div>
             <div class="info-changes" id="info-changes"></div>
             <div class="info-desc" id="info-desc"></div>
@@ -834,6 +852,7 @@
     <div class="map-wrapper">
         <div id="map4"></div>
         <div class="info-panel" id="info-panel4">
+            <button class="info-close" id="info-close4" aria-label="Close">&times;</button>
             <div class="info-district" id="info-district4"></div>
             <div class="info-interaction-score" id="info-interaction-score4"></div>
             <div class="info-changes" id="info-changes4"></div>
@@ -1311,9 +1330,14 @@
         }
     }).addTo(map);
 
-    // Dismiss info panel when tapping the map background (mobile)
+    // Dismiss info panel (mobile): tap background or close button
     if ('ontouchstart' in window) {
         map.on('click', function() { geojsonLayer.resetStyle(); infoPanel.classList.remove('visible'); });
+        document.getElementById('info-close').addEventListener('click', function(e) {
+            e.stopPropagation();
+            geojsonLayer.resetStyle();
+            infoPanel.classList.remove('visible');
+        });
     }
 
     labels.forEach(label => {
@@ -1452,9 +1476,14 @@
             }
         }).addTo(map4);
 
-        // Dismiss info panel when tapping the map background (mobile)
+        // Dismiss info panel (mobile): tap background or close button
         if ('ontouchstart' in window) {
             map4.on('click', function() { geojsonLayer4.resetStyle(); infoPanel4.classList.remove('visible'); });
+            document.getElementById('info-close4').addEventListener('click', function(e) {
+                e.stopPropagation();
+                geojsonLayer4.resetStyle();
+                infoPanel4.classList.remove('visible');
+            });
         }
 
         // WP-held outline (Aljunied GRC + Hougang SMC + Sengkang GRC)
