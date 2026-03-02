@@ -1055,11 +1055,11 @@
 
         // ── Annotation: 2020 widest gap ──
         var ann2Cy = mt + 2 * rowH + rowH / 2;
-        var ann2TextX = x(37);
+        var ann2TextX = x(33.0) - 16;
 
         var ann2Text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         ann2Text.setAttribute('x', ann2TextX); ann2Text.setAttribute('y', ann2Cy - 22);
-        ann2Text.setAttribute('text-anchor', 'start');
+        ann2Text.setAttribute('text-anchor', 'end');
         ann2Text.setAttribute('font-family', 'IBM Plex Sans, sans-serif');
         ann2Text.setAttribute('font-size', '12');
         ann2Text.setAttribute('fill', '#aaa');
@@ -1069,7 +1069,7 @@
 
         var ann2Text2 = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         ann2Text2.setAttribute('x', ann2TextX); ann2Text2.setAttribute('y', ann2Cy - 7);
-        ann2Text2.setAttribute('text-anchor', 'start');
+        ann2Text2.setAttribute('text-anchor', 'end');
         ann2Text2.setAttribute('font-family', 'IBM Plex Sans, sans-serif');
         ann2Text2.setAttribute('font-size', '12');
         ann2Text2.setAttribute('fill', '#aaa');
@@ -1078,7 +1078,7 @@
         annGroup.appendChild(ann2Text2);
 
         var ann2Line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        ann2Line.setAttribute('x1', x(33.0) + 16); ann2Line.setAttribute('x2', ann2TextX - 3);
+        ann2Line.setAttribute('x1', x(33.0) - 4); ann2Line.setAttribute('x2', ann2TextX + 3);
         ann2Line.setAttribute('y1', ann2Cy - 15); ann2Line.setAttribute('y2', ann2Cy - 24);
         ann2Line.setAttribute('stroke', '#ccc');
         ann2Line.setAttribute('stroke-width', 0.7);
