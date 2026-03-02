@@ -483,7 +483,7 @@
 
         /* Hero label + dot: sized for the scaled-up state, transition on shrink */
         .blob-cell--hero .area-label {
-            font-size: 16px;
+            font-size: 20px;
             transition: font-size 1.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .blob-cell--hero .area-dot {
@@ -508,7 +508,7 @@
 
         .area-label {
             font-family: var(--sans);
-            font-size: 26px;
+            font-size: 34px;
             font-weight: 600;
             fill: #C4453C;
         }
@@ -558,7 +558,7 @@
 
         /* State 2 — Grid: hero shrinks back to grid cell, others appear */
         .blob-stage.state-grid .blob-cell--hero .area-label {
-            font-size: 26px;
+            font-size: 34px;
         }
         .blob-stage.state-grid .blob-cell--hero .area-dot {
             r: 8;
@@ -737,7 +737,7 @@
             .footnote { padding: 1rem 1.5rem; }
             .chart-section { padding: 1.5rem 1rem 1rem; }
 
-            .map-wrapper { min-height: unset; max-height: unset; height: 85vh; }
+            .map-wrapper { min-height: unset; max-height: unset; height: 70vh; }
 
             .info-panel { min-width: 200px; max-width: 260px; left: 1rem; bottom: 1rem; padding-right: 2rem; }
             .info-close { display: block; }
@@ -1581,7 +1581,7 @@
             var txt = document.createElementNS(svgNS, 'text');
             txt.setAttribute('class', 'area-label');
             // If label would overflow right edge, anchor to the right of dot instead
-            var estWidth = area.label.length * 14;
+            var estWidth = area.label.length * 18;
             if (area.center[0] + 12 + estWidth > 790) {
                 txt.setAttribute('x', area.center[0] - 12);
                 txt.setAttribute('text-anchor', 'end');
