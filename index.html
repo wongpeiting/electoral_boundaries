@@ -61,8 +61,10 @@
         }
 
         .byline {
+            display: block;
             font-family: var(--sans);
-            font-size: 0.8rem;
+            font-size: 0.9rem;
+            margin-top: 0.6rem;
             color: var(--ink-light);
             font-weight: 600;
         }
@@ -761,7 +763,7 @@
     <header>
         <p class="kicker">Polling the Data</p>
         <h1>Where Singapore's Voting Lines Keep Moving</h1>
-        <p class="dek">A mapping exercise reveals that the biggest boundary shifts since 2006 are not in opposition strongholds – they're in the constituencies around them.</p>
+        <p class="dek">The biggest boundary shifts are not in opposition strongholds. They're in the constituencies around them.</p>
         <span class="byline">By Wong Pei Ting</span>
     </header>
 
@@ -1165,7 +1167,7 @@
     }
 
     var isMobile = window.innerWidth <= 480;
-    var sgBounds = L.latLngBounds([1.205, 103.59], [1.455, 104.05]);
+    var sgBounds = L.latLngBounds([1.205, 103.59], [1.415, 104.05]);
     const map = L.map('map', {
         zoomControl: false,
         scrollWheelZoom: false,
