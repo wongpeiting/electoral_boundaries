@@ -1140,9 +1140,8 @@
         return '#ccc';
     }
 
-    const map = L.map('map', { 
-        center: [1.32, 103.82], 
-        zoom: 11.4,
+    var sgBounds = L.latLngBounds([1.205, 103.59], [1.475, 104.05]);
+    const map = L.map('map', {
         zoomControl: false,
         scrollWheelZoom: false,
         doubleClickZoom: false,
@@ -1151,6 +1150,7 @@
         keyboard: false,
         dragging: false
     });
+    map.fitBounds(sgBounds, { padding: [10, 10] });
 
     L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
         attribution: 'OpenStreetMap, CARTO',
@@ -1368,8 +1368,6 @@
         if (!mapEl) return;
 
         var map4 = L.map('map4', {
-            center: [1.32, 103.82],
-            zoom: 11.4,
             zoomControl: false,
             scrollWheelZoom: false,
             doubleClickZoom: false,
@@ -1378,6 +1376,7 @@
             keyboard: false,
             dragging: false
         });
+        map4.fitBounds(sgBounds, { padding: [10, 10] });
 
         L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
             attribution: 'OpenStreetMap, CARTO',
