@@ -1054,12 +1054,13 @@
         annGroup.appendChild(annLine);
 
         // ── Annotation: 2020 widest gap ──
-        var ann2Cy = mt + 2 * rowH + rowH / 2;
-        var ann2TextX = x(33.0) - 16;
+        var ann2Cy = mt + 2 * rowH + rowH / 2;  // center of 2020 row
+        var ann2MidY = mt + 1.5 * rowH;          // midpoint between 2015 and 2020 rows
+        var ann2TextX = x(33.0) + 20;
 
         var ann2Text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        ann2Text.setAttribute('x', ann2TextX); ann2Text.setAttribute('y', ann2Cy - 22);
-        ann2Text.setAttribute('text-anchor', 'end');
+        ann2Text.setAttribute('x', ann2TextX); ann2Text.setAttribute('y', ann2MidY - 8);
+        ann2Text.setAttribute('text-anchor', 'start');
         ann2Text.setAttribute('font-family', 'IBM Plex Sans, sans-serif');
         ann2Text.setAttribute('font-size', '12');
         ann2Text.setAttribute('fill', '#aaa');
@@ -1068,18 +1069,18 @@
         annGroup.appendChild(ann2Text);
 
         var ann2Text2 = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        ann2Text2.setAttribute('x', ann2TextX); ann2Text2.setAttribute('y', ann2Cy - 7);
-        ann2Text2.setAttribute('text-anchor', 'end');
+        ann2Text2.setAttribute('x', ann2TextX); ann2Text2.setAttribute('y', ann2MidY + 7);
+        ann2Text2.setAttribute('text-anchor', 'start');
         ann2Text2.setAttribute('font-family', 'IBM Plex Sans, sans-serif');
         ann2Text2.setAttribute('font-size', '12');
         ann2Text2.setAttribute('fill', '#aaa');
         ann2Text2.setAttribute('font-style', 'italic');
-        ann2Text2.textContent = 'SMCs \u2014 all WP-contested in 2015 \u2014 dissolved';
+        ann2Text2.textContent = 'SMCs \u2014 all WP-contested \u2014 dissolved';
         annGroup.appendChild(ann2Text2);
 
         var ann2Line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        ann2Line.setAttribute('x1', x(33.0) - 4); ann2Line.setAttribute('x2', ann2TextX + 3);
-        ann2Line.setAttribute('y1', ann2Cy - 15); ann2Line.setAttribute('y2', ann2Cy - 24);
+        ann2Line.setAttribute('x1', x(33.0) + 6); ann2Line.setAttribute('x2', ann2TextX - 4);
+        ann2Line.setAttribute('y1', ann2Cy - 12); ann2Line.setAttribute('y2', ann2MidY + 2);
         ann2Line.setAttribute('stroke', '#ccc');
         ann2Line.setAttribute('stroke-width', 0.7);
         annGroup.appendChild(ann2Line);
