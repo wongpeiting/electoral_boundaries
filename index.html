@@ -876,7 +876,7 @@
             <span style="display:flex;align-items:center;gap:0.3rem;color:#08519c;font-weight:500;"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#08519c;border:1px solid #063d73;"></span> WP-contested seats</span>
         </div>
         <div class="chart-svg-wrap" id="churn-dumbbell-wrap"></div>
-        <p class="chart-source">Source: Own calculations using the Elections Department's electoral boundary data. 'Area redrawn' refers to the share of a constituency's land reassigned to a different constituency in the year's boundary review.</p>
+        <p class="chart-source">Source: Based on calculations using the Elections Department's electoral boundary data.</p>
     </div>
 
     <script>
@@ -1054,33 +1054,37 @@
         annGroup.appendChild(annLine);
 
         // ── Annotation: 2020 widest gap ──
-        var ann2Cy = mt + 2 * rowH + rowH / 2;  // center of 2020 row
-        var ann2MidY = mt + 1.5 * rowH;          // midpoint between 2015 and 2020 rows
-        var ann2TextX = x(33.0) + 20;
+        var ann2Cy = mt + 2 * rowH + rowH / 2;   // center of 2020 row (dot y)
+        var ann2LabelY = ann2Cy - 12;             // "33%" label baseline
+        var ann2TextX = x(33.0) + 45;
+        var ann2LineH = 15;
 
-        var ann2Text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        ann2Text.setAttribute('x', ann2TextX); ann2Text.setAttribute('y', ann2MidY - 8);
-        ann2Text.setAttribute('text-anchor', 'start');
-        ann2Text.setAttribute('font-family', 'IBM Plex Sans, sans-serif');
-        ann2Text.setAttribute('font-size', '12');
-        ann2Text.setAttribute('fill', '#aaa');
-        ann2Text.setAttribute('font-style', 'italic');
-        ann2Text.textContent = 'Fengshan, Punggol East & Sengkang West';
-        annGroup.appendChild(ann2Text);
+        // Position text block so bottom line sits 24px above the "33%" label
+        var ann2TextBottomY = ann2LabelY - 24;
+        var ann2Lines = [
+            'Fengshan, Punggol East',
+            '& Sengkang West SMCs \u2014',
+            'all WP-contested \u2014 dissolved'
+        ];
+        ann2Lines.forEach(function(txt, i) {
+            var t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            t.setAttribute('x', ann2TextX);
+            t.setAttribute('y', ann2TextBottomY - (2 - i) * ann2LineH);
+            t.setAttribute('text-anchor', 'start');
+            t.setAttribute('font-family', 'IBM Plex Sans, sans-serif');
+            t.setAttribute('font-size', '12');
+            t.setAttribute('fill', '#aaa');
+            t.setAttribute('font-style', 'italic');
+            t.textContent = txt;
+            annGroup.appendChild(t);
+        });
 
-        var ann2Text2 = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        ann2Text2.setAttribute('x', ann2TextX); ann2Text2.setAttribute('y', ann2MidY + 7);
-        ann2Text2.setAttribute('text-anchor', 'start');
-        ann2Text2.setAttribute('font-family', 'IBM Plex Sans, sans-serif');
-        ann2Text2.setAttribute('font-size', '12');
-        ann2Text2.setAttribute('fill', '#aaa');
-        ann2Text2.setAttribute('font-style', 'italic');
-        ann2Text2.textContent = 'SMCs \u2014 all WP-contested \u2014 dissolved';
-        annGroup.appendChild(ann2Text2);
-
+        // Line sits midway between text bottom and "33%" label, equal gaps
         var ann2Line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        ann2Line.setAttribute('x1', x(33.0) + 6); ann2Line.setAttribute('x2', ann2TextX - 4);
-        ann2Line.setAttribute('y1', ann2Cy - 12); ann2Line.setAttribute('y2', ann2MidY + 2);
+        ann2Line.setAttribute('x1', x(33.0) + 14);
+        ann2Line.setAttribute('y1', ann2LabelY - 7);
+        ann2Line.setAttribute('x2', ann2TextX - 8);
+        ann2Line.setAttribute('y2', ann2TextBottomY + 7);
         ann2Line.setAttribute('stroke', '#ccc');
         ann2Line.setAttribute('stroke-width', 0.7);
         annGroup.appendChild(ann2Line);
@@ -1161,9 +1165,7 @@
     }
 
     var isMobile = window.innerWidth <= 480;
-    var sgBounds = isMobile
-        ? L.latLngBounds([1.10, 103.59], [1.455, 104.05])   // extend south for info box room
-        : L.latLngBounds([1.205, 103.59], [1.455, 104.05]);
+    var sgBounds = L.latLngBounds([1.205, 103.59], [1.455, 104.05]);
     const map = L.map('map', {
         zoomControl: false,
         scrollWheelZoom: false,
@@ -1173,7 +1175,9 @@
         keyboard: false,
         dragging: false
     });
-    map.fitBounds(sgBounds, { padding: [10, 10] });
+    map.fitBounds(sgBounds, isMobile
+        ? { paddingTopLeft: [10, 10], paddingBottomRight: [10, 250] }
+        : { padding: [10, 10] });
 
     L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
         attribution: 'OpenStreetMap, CARTO',
@@ -1404,7 +1408,9 @@
             keyboard: false,
             dragging: false
         });
-        map4.fitBounds(sgBounds, { padding: [10, 10] });
+        map4.fitBounds(sgBounds, isMobile
+            ? { paddingTopLeft: [10, 10], paddingBottomRight: [10, 250] }
+            : { padding: [10, 10] });
 
         L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
             attribution: 'OpenStreetMap, CARTO',
