@@ -737,6 +737,7 @@
             .methodology-box { padding: 0 1.5rem; }
             .footnote { padding: 1rem 1.5rem; }
             .chart-section { padding: 1.5rem 1rem 1rem; }
+            .chart-annotations { display: none; }
             .chart-subtitle { font-size: 0.75rem; }
 
             .map-wrapper { min-height: unset; max-height: unset; height: 70vh; }
@@ -896,8 +897,14 @@
             { cycle: '2025', wp: 47.8, nonwp: 32.6 },
         ];
 
-        var W = 860, H = 300;
-        var ml = 70, mr = 30, mt = 12, mb = 15;
+        var isMobile = window.innerWidth <= 480;
+        var W = isMobile ? 380 : 860, H = isMobile ? 340 : 300;
+        var ml = isMobile ? 50 : 70, mr = isMobile ? 10 : 30, mt = 12, mb = 15;
+        var cycleFontSize = isMobile ? 16 : 14;
+        var labelFontSize = isMobile ? 14 : 11;
+        var dotR = isMobile ? 8 : 6;
+        var barH = 8;
+        var minSep = isMobile ? 38 : 46;
         var plotW = W - ml - mr;
         var plotH = H - mt - mb;
         var rowH = plotH / data.length;
@@ -933,7 +940,7 @@
             var cycleLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
             cycleLabel.setAttribute('x', 10); cycleLabel.setAttribute('y', cy - 3);
             cycleLabel.setAttribute('font-family', 'IBM Plex Sans, sans-serif');
-            cycleLabel.setAttribute('font-size', '14');
+            cycleLabel.setAttribute('font-size', cycleFontSize);
             cycleLabel.setAttribute('font-weight', '600');
             cycleLabel.setAttribute('fill', '#1A1918');
             cycleLabel.textContent = d.cycle;
@@ -946,9 +953,9 @@
             var barMaxX = x(Math.max(d.wp, d.nonwp));
             var gapBar = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
             gapBar.setAttribute('x', barMinX);
-            gapBar.setAttribute('y', cy - 4);
+            gapBar.setAttribute('y', cy - barH / 2);
             gapBar.setAttribute('width', Math.max(barMaxX - barMinX, 1));
-            gapBar.setAttribute('height', 8);
+            gapBar.setAttribute('height', barH);
             gapBar.setAttribute('rx', 2);
             // Color intensity by gap size
             var gapColor = gap < 5 ? 'rgba(8,81,156,0.08)' :
@@ -969,7 +976,7 @@
             // Non-WP dot (grey)
             var dotNon = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
             dotNon.setAttribute('cx', x(d.nonwp)); dotNon.setAttribute('cy', cy);
-            dotNon.setAttribute('r', 6);
+            dotNon.setAttribute('r', dotR);
             dotNon.setAttribute('fill', '#bdbdbd');
             dotNon.setAttribute('stroke', '#999');
             dotNon.setAttribute('stroke-width', 1);
@@ -978,7 +985,7 @@
             // WP dot (blue)
             var dotWP = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
             dotWP.setAttribute('cx', x(d.wp)); dotWP.setAttribute('cy', cy);
-            dotWP.setAttribute('r', 6);
+            dotWP.setAttribute('r', dotR);
             dotWP.setAttribute('fill', '#08519c');
             dotWP.setAttribute('stroke', '#063d73');
             dotWP.setAttribute('stroke-width', 1);
@@ -986,7 +993,6 @@
 
             // Value labels — with collision avoidance
             var nonX = x(d.nonwp), wpX = x(d.wp);
-            var minSep = 46; // minimum pixel separation for labels
             var pixelGap = Math.abs(wpX - nonX);
             var nonAnchor = 'middle', wpAnchor = 'middle';
             var nonLabelX = nonX, wpLabelX = wpX;
@@ -1003,7 +1009,7 @@
             nonLabel.setAttribute('x', nonLabelX); nonLabel.setAttribute('y', cy - 12);
             nonLabel.setAttribute('text-anchor', nonAnchor);
             nonLabel.setAttribute('font-family', 'JetBrains Mono, monospace');
-            nonLabel.setAttribute('font-size', '11');
+            nonLabel.setAttribute('font-size', labelFontSize);
             nonLabel.setAttribute('fill', '#999');
             nonLabel.textContent = d.nonwp + '%';
             svg.appendChild(nonLabel);
@@ -1012,7 +1018,7 @@
             wpLabel.setAttribute('x', wpLabelX); wpLabel.setAttribute('y', cy - 12);
             wpLabel.setAttribute('text-anchor', wpAnchor);
             wpLabel.setAttribute('font-family', 'JetBrains Mono, monospace');
-            wpLabel.setAttribute('font-size', '11');
+            wpLabel.setAttribute('font-size', labelFontSize);
             wpLabel.setAttribute('font-weight', '500');
             wpLabel.setAttribute('fill', '#08519c');
             wpLabel.textContent = d.wp + '%';
