@@ -876,7 +876,7 @@
             <span style="display:flex;align-items:center;gap:0.3rem;color:#08519c;font-weight:500;"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#08519c;border:1px solid #063d73;"></span> WP-contested seats</span>
         </div>
         <div class="chart-svg-wrap" id="churn-dumbbell-wrap"></div>
-        <p class="chart-source">Source: Based on calculations using the Elections Department's electoral boundary data.</p>
+        <p class="chart-source">Source: Based on calculations using Elections Department boundary data.</p>
     </div>
 
     <script>
@@ -1069,7 +1069,7 @@
         ann2Lines.forEach(function(txt, i) {
             var t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
             t.setAttribute('x', ann2TextX);
-            t.setAttribute('y', ann2TextBottomY - (2 - i) * ann2LineH);
+            t.setAttribute('y', ann2TextBottomY - (2 - i) * ann2LineH + 32);
             t.setAttribute('text-anchor', 'start');
             t.setAttribute('font-family', 'IBM Plex Sans, sans-serif');
             t.setAttribute('font-size', '12');
@@ -1082,9 +1082,9 @@
         // Line sits midway between text bottom and "33%" label, equal gaps
         var ann2Line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
         ann2Line.setAttribute('x1', x(33.0) + 14);
-        ann2Line.setAttribute('y1', ann2LabelY - 7);
+        ann2Line.setAttribute('y1', ann2LabelY - 11);
         ann2Line.setAttribute('x2', ann2TextX - 8);
-        ann2Line.setAttribute('y2', ann2TextBottomY + 7);
+        ann2Line.setAttribute('y2', ann2TextBottomY + 4);
         ann2Line.setAttribute('stroke', '#ccc');
         ann2Line.setAttribute('stroke-width', 0.7);
         annGroup.appendChild(ann2Line);
