@@ -8,7 +8,7 @@ I wanted to know where residents feel this most, so I mapped how electoral bound
 
 This is one article that I had wanted to produce for some time now, if not for my tech limitations. Thankfully, the availability of AI tools has significantly lowered the technical barrier to working with spatial data. Using Claude Code, I was able to manipulate boundary files and track changes across multiple elections in ways that would previously have required far more specialised training. This shifted the nature of the challenge to how I can interpret what I am seeing rather than whether I could process the data. I could even make the data look more "fun" by playing around with **CSS animations. <-- I owe this knowledge to [Carson TerBush](https://github.com/carsonology), my Data Studio mentor. Many thanks to her for explaining what CSS animations can do.
 
-<video src="https://github.com/user-attachments/assets/2b14823c-32af-42d5-ac1c-552ead8502c5" autoplay loop muted playsinline></video>
+<video src="https://github.com/user-attachments/assets/2b14823c-32af-42d5-ac1c-552ead8502c5" width="400" autoplay loop muted playsinline></video>
 
 Given that algorithms class is in full swing, the project also pushed me to think more carefully about how to communicate statistical findings. The analysis did not yield strong or significant relationships, largely due to small sample sizes, with only around 30 constituencies per election and fewer than a dozen WP-contested seats in most cycles, but that did not mean there was no story. The difficulty lay in showing how the absence of a clear statistical link could coexist with a meaningful spatial pattern and in expressing that insight without defaulting to technical language.
 
