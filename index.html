@@ -726,7 +726,6 @@
             .blob-cell { width: 160px; }
             .blob-grid { gap: 0.2rem 0.4rem; }
             .blob-label { font-size: 0.55rem; }
-            .chart-annotations { display: none; }
             .desktop-only { display: none; }
         }
     </style>
@@ -1011,17 +1010,17 @@
         annText.setAttribute('x', annTextX); annText.setAttribute('y', annCy - 5);
         annText.setAttribute('text-anchor', 'end');
         annText.setAttribute('font-family', 'IBM Plex Sans, sans-serif');
-        annText.setAttribute('font-size', '10');
+        annText.setAttribute('font-size', '12');
         annText.setAttribute('fill', '#aaa');
         annText.setAttribute('font-style', 'italic');
         annText.textContent = 'Nearly equal churn as large GRCs';
         annGroup.appendChild(annText);
 
         var annText2 = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        annText2.setAttribute('x', annTextX); annText2.setAttribute('y', annCy + 8);
+        annText2.setAttribute('x', annTextX); annText2.setAttribute('y', annCy + 10);
         annText2.setAttribute('text-anchor', 'end');
         annText2.setAttribute('font-family', 'IBM Plex Sans, sans-serif');
-        annText2.setAttribute('font-size', '10');
+        annText2.setAttribute('font-size', '12');
         annText2.setAttribute('fill', '#aaa');
         annText2.setAttribute('font-style', 'italic');
         annText2.textContent = 'got resized from 6 to 4\u20135 member';
@@ -1043,17 +1042,17 @@
         ann2Text.setAttribute('x', ann2TextX); ann2Text.setAttribute('y', ann2Cy - 22);
         ann2Text.setAttribute('text-anchor', 'start');
         ann2Text.setAttribute('font-family', 'IBM Plex Sans, sans-serif');
-        ann2Text.setAttribute('font-size', '10');
+        ann2Text.setAttribute('font-size', '12');
         ann2Text.setAttribute('fill', '#aaa');
         ann2Text.setAttribute('font-style', 'italic');
         ann2Text.textContent = 'Fengshan, Punggol East & Sengkang West';
         annGroup.appendChild(ann2Text);
 
         var ann2Text2 = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        ann2Text2.setAttribute('x', ann2TextX); ann2Text2.setAttribute('y', ann2Cy - 9);
+        ann2Text2.setAttribute('x', ann2TextX); ann2Text2.setAttribute('y', ann2Cy - 7);
         ann2Text2.setAttribute('text-anchor', 'start');
         ann2Text2.setAttribute('font-family', 'IBM Plex Sans, sans-serif');
-        ann2Text2.setAttribute('font-size', '10');
+        ann2Text2.setAttribute('font-size', '12');
         ann2Text2.setAttribute('fill', '#aaa');
         ann2Text2.setAttribute('font-style', 'italic');
         ann2Text2.textContent = 'SMCs \u2014 all WP-contested in 2015 \u2014 dissolved';
