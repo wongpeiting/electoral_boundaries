@@ -1299,12 +1299,22 @@
             return !tinyIdx.has(i);
         },
         onEachFeature: function(feature, layer) {
-            layer.on({ mouseover: highlightFeature, mouseout: resetHighlight, click: highlightFeature });
+            if ('ontouchstart' in window) {
+                layer.on('click', function(e) {
+                    L.DomEvent.stopPropagation(e);
+                    geojsonLayer.resetStyle();
+                    highlightFeature(e);
+                });
+            } else {
+                layer.on({ mouseover: highlightFeature, mouseout: resetHighlight });
+            }
         }
     }).addTo(map);
 
     // Dismiss info panel when tapping the map background (mobile)
-    map.on('click', function() { geojsonLayer.resetStyle(); infoPanel.classList.remove('visible'); });
+    if ('ontouchstart' in window) {
+        map.on('click', function() { geojsonLayer.resetStyle(); infoPanel.classList.remove('visible'); });
+    }
 
     labels.forEach(label => {
         const icon = L.divIcon({
@@ -1431,12 +1441,22 @@
                 return !uninhabitedIdx.has(boundaryData.features.indexOf(feature));
             },
             onEachFeature: function(feature, layer) {
-                layer.on({ mouseover: highlightFeature4, mouseout: resetHighlight4, click: highlightFeature4 });
+                if ('ontouchstart' in window) {
+                    layer.on('click', function(e) {
+                        L.DomEvent.stopPropagation(e);
+                        geojsonLayer4.resetStyle();
+                        highlightFeature4(e);
+                    });
+                } else {
+                    layer.on({ mouseover: highlightFeature4, mouseout: resetHighlight4 });
+                }
             }
         }).addTo(map4);
 
         // Dismiss info panel when tapping the map background (mobile)
-        map4.on('click', function() { geojsonLayer4.resetStyle(); infoPanel4.classList.remove('visible'); });
+        if ('ontouchstart' in window) {
+            map4.on('click', function() { geojsonLayer4.resetStyle(); infoPanel4.classList.remove('visible'); });
+        }
 
         // WP-held outline (Aljunied GRC + Hougang SMC + Sengkang GRC)
         var strongholdData = {"type":"FeatureCollection","features":[{"type":"Feature","properties":{"name":"WP_HELD"},"geometry":{"type":"Polygon","coordinates":[[[103.85687,1.35551],[103.85736,1.35813],[103.86066,1.36729],[103.8609,1.36942],[103.86694,1.37179],[103.86911,1.37181],[103.88677,1.36784],[103.88885,1.37064],[103.88593,1.37207],[103.88811,1.37464],[103.89157,1.37652],[103.89486,1.37682],[103.89622,1.37636],[103.89686,1.37941],[103.89498,1.37998],[103.89125,1.38016],[103.88867,1.38209],[103.89079,1.385],[103.89128,1.38656],[103.89004,1.38689],[103.88149,1.39198],[103.88163,1.39303],[103.88496,1.39576],[103.88658,1.40117],[103.89596,1.39996],[103.89939,1.39898],[103.9036,1.3969],[103.90733,1.3939],[103.91751,1.38235],[103.91489,1.37878],[103.91771,1.38007],[103.91926,1.37927],[103.92051,1.37292],[103.92548,1.36759],[103.92741,1.36652],[103.93089,1.36612],[103.93091,1.36036],[103.93045,1.35829],[103.92499,1.3486],[103.93,1.34509],[103.93558,1.33947],[103.93302,1.33791],[103.93429,1.33152],[103.92492,1.32929],[103.92227,1.32996],[103.91952,1.33234],[103.90893,1.32716],[103.9058,1.32622],[103.90566,1.328],[103.90475,1.32953],[103.89554,1.33842],[103.89214,1.34067],[103.88967,1.34905],[103.8861,1.34886],[103.88465,1.34933],[103.88434,1.35126],[103.87922,1.35103],[103.87653,1.35246],[103.87398,1.35527],[103.87305,1.35572],[103.86778,1.35537],[103.86383,1.35314],[103.86024,1.3488],[103.86055,1.34439],[103.86014,1.3442],[103.85717,1.3527],[103.85687,1.35551]]]}}]};
