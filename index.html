@@ -1159,7 +1159,7 @@
         return '#ccc';
     }
 
-    var sgBounds = L.latLngBounds([1.205, 103.59], [1.475, 104.05]);
+    var sgBounds = L.latLngBounds([1.205, 103.59], [1.455, 104.05]);
     const map = L.map('map', {
         zoomControl: false,
         scrollWheelZoom: false,
@@ -1169,7 +1169,7 @@
         keyboard: false,
         dragging: false
     });
-    map.fitBounds(sgBounds, { padding: [10, 10] });
+    map.fitBounds(sgBounds, { paddingTopLeft: [10, 0], paddingBottomRight: [10, 40] });
 
     L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
         attribution: 'OpenStreetMap, CARTO',
@@ -1400,7 +1400,7 @@
             keyboard: false,
             dragging: false
         });
-        map4.fitBounds(sgBounds, { padding: [10, 10] });
+        map4.fitBounds(sgBounds, { paddingTopLeft: [10, 0], paddingBottomRight: [10, 40] });
 
         L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
             attribution: 'OpenStreetMap, CARTO',
