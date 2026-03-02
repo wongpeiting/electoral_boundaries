@@ -464,8 +464,9 @@
         .blob-cell {
             width: 320px;
             text-align: center;
+            overflow: visible;
         }
-        .blob-cell svg { width: 100%; display: block; }
+        .blob-cell svg { width: 100%; display: block; overflow: visible; }
 
         /* Non-hero cells: hidden initially, fade in on state-grid (delayed after hero shrinks) */
         .blob-cell:not(.blob-cell--hero) {
@@ -876,7 +877,7 @@
 
     <div class="chart-section" id="churn-dumbbell-section">
         <div class="chart-title">After each election, WP-contested seats lost more territory</div>
-        <div class="chart-subtitle">Share of area redrawn in the boundary review ahead of each election, comparing seats the WP contested versus those it didn't</div>
+        <div class="chart-subtitle">Share of area redrawn in the boundary review ahead of each election</div>
         <div style="display:flex;align-items:center;gap:1rem;margin-bottom:0.5rem;font-family:var(--sans);font-size:0.72rem;">
             <span style="display:flex;align-items:center;gap:0.3rem;color:#7A7875;"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#bdbdbd;border:1px solid #999;"></span> Non-WP seats</span>
             <span style="display:flex;align-items:center;gap:0.3rem;color:#08519c;font-weight:500;"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#08519c;border:1px solid #063d73;"></span> WP-contested seats</span>
@@ -1584,15 +1585,10 @@
 
             var txt = document.createElementNS(svgNS, 'text');
             txt.setAttribute('class', 'area-label');
-            // If label would overflow right edge, anchor to the right of dot instead
-            var estWidth = area.label.length * 18;
-            if (area.center[0] + 12 + estWidth > 790) {
-                txt.setAttribute('x', area.center[0] - 12);
-                txt.setAttribute('text-anchor', 'end');
-            } else {
-                txt.setAttribute('x', area.center[0] + 12);
-            }
-            txt.setAttribute('y', area.center[1] + 4);
+            // Place label below the dot, centered horizontally
+            txt.setAttribute('x', area.center[0]);
+            txt.setAttribute('y', area.center[1] + 50);
+            txt.setAttribute('text-anchor', 'middle');
             txt.textContent = area.label;
             svg.appendChild(txt);
 
