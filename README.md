@@ -52,6 +52,12 @@ The dumbbell chart compares how much territory was redrawn in WP-contested seats
 ## Tech stack
 
 - Claude Code
-- SvelteKit + LayerCake (maps — Canvas/SVG/HTML layered rendering)
+- SvelteKit + LayerCake (maps — Canvas/SVG/HTML layered rendering) <-- Updated from Leaflet.js
 - Vanilla JS + SVG (dumbbell chart, blob morphing)
 - Python / GeoPandas / Shapely (spatial analysis)
+
+### Why LayerCake over Leaflet
+
+The maps were originally built with Leaflet.js, which rendered all 1,762 polygon features as individual SVG `<path>` elements in the DOM. This worked but had drawbacks: hover performance was sluggish with that many DOM nodes, styling control was limited by Leaflet's API, and the tile basemap was largely redundant since the filled polygons already covered Singapore entirely.
+
+The maps were rebuilt using [LayerCake](https://layercake.graphics/)'s layered rendering approach, which composites three layers: **Canvas** for fast polygon rendering (all 1,762 features drawn in a single pass), **SVG** for transparent hit-test paths (interactive hover/tap detection without visible rendering), and **HTML** for positioned labels. This gave better rendering performance, finer control over styling, and eliminated the tile basemap dependency – the maps now render against a plain background colour.
