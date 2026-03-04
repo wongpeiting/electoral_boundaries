@@ -115,7 +115,7 @@ AREAS = [
     },
     {
         "id": "geylang",
-        "label": "Geylang East / Circuit Rd",
+        "label": "MacPherson",
         "center": (103.885, 1.327),
         "districts": {
             2006: "MACPHERSON",
@@ -153,7 +153,7 @@ AREAS = [
     },
     {
         "id": "siglap",
-        "label": "Siglap/ Frankel Estate",
+        "label": "Upper East Coast",
         "center": (103.93, 1.317),
         "districts": {
             2006: "EAST COAST",
@@ -172,7 +172,7 @@ AREAS = [
     },
     {
         "id": "tohguan",
-        "label": "West Coast/ Faber",
+        "label": "Faber",
         "center": (103.758, 1.320),
         "districts": {
             2006: "HOLLAND-BUKIT TIMAH",

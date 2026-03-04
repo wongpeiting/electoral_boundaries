@@ -323,15 +323,16 @@
             justify-content: center;
             background: var(--paper);
             overflow: hidden;
+            padding-bottom: 12vh;
         }
 
-        /* Grid: all 7 blob cells; Fernvale is the hero */
+        /* Grid: all 6 blob cells; Fernvale is the hero */
         .blob-grid {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
             gap: 0.4rem 0.8rem;
-            max-width: 1380px;
+            max-width: 990px;
             transition: opacity 0.6s ease;
         }
 
@@ -499,7 +500,7 @@
         /* ── Responsive ── */
         @media (max-width: 900px) {
             .blob-cell { width: 260px; }
-            .blob-grid { max-width: 1060px; }
+            .blob-grid { max-width: 810px; }
         }
 
         @media (max-width: 600px) {
@@ -626,8 +627,9 @@
 
             .map-wrapper { min-height: unset; max-height: unset; height: calc(67vw + 50px); }
 
-            .blob-cell { width: 160px; }
-            .blob-grid { gap: 0.2rem 0.4rem; }
+            .blob-cell { width: 140px; }
+            .blob-cell--hero { order: -1; }
+            .blob-grid { gap: 0.3rem 1rem; }
             .blob-label { font-size: 0.55rem; }
             .area-label { font-size: 60px; }
             .blob-cell--hero .area-label { font-size: 36px; }
@@ -656,12 +658,12 @@
 
     <div class="prose">
         <p>Singapore redraws its electoral map before every general election. On paper, it is a technical response to population shifts. On the ground, it can feel less so. As some neighbourhoods are repeatedly split and merged, the question returns: are the lines adjusted to weaken opposition support?</p>
-        <p>To understand this, I began by mapping how often each part of Singapore was reassigned between constituencies from 2006 to 2025. The result is uneven. Large swathes of the island – including opposition strongholds such as Hougang and Aljunied – have remained intact. Elsewhere, in seven neighbourhoods to be specific, boundaries have shifted three times across the four elections held after 2006.</p>
+        <p>To understand this, I began by mapping how often each part of Singapore was reassigned between constituencies from 2006 to 2025. The result is uneven. Large swathes of the island – including opposition strongholds such as Hougang and Aljunied – have remained intact. Elsewhere, in six neighbourhoods to be specific, boundaries have shifted three times across the four elections held after 2006.</p>
     </div>
 
     <div class="map-header">
         <div class="chart-title">Most Redrawn Neighbourhoods</div>
-        <div class="chart-subtitle">Thrice over the past four elections, seven pockets of land were passed from one constituency to another.</div>
+        <div class="chart-subtitle">Thrice over the past four elections, six pockets of land were passed from one constituency to another.</div>
     </div>
 
     <div class="legend-row">
@@ -749,7 +751,7 @@
             <span style="display:flex;align-items:center;gap:0.3rem;color:#08519c;font-weight:500;"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#08519c;border:1px solid #063d73;"></span> WP-contested seats</span>
         </div>
         <div class="chart-svg-wrap" id="churn-dumbbell-wrap"></div>
-        <p class="chart-source">Source: Based on calculations using Elections Department boundary data.</p>
+        <p class="chart-source">An area is counted as 'changed' if it moved from one named constituency to a different named constituency. An exception is made for GRCs expanded by adding a partner constituency but retained its original name as the leading component (e.g. West Coast GRC to West Coast-Jurong West GRC). <strong>Source: Own calculations using Elections Department boundary data</strong></p>
     </div>
 
     <script>
@@ -758,17 +760,18 @@
             { cycle: '2011', wp: 36.3, nonwp: 34.4 },
             { cycle: '2015', wp: 30.0, nonwp: 11.3 },
             { cycle: '2020', wp: 33.0, nonwp: 7.0  },
-            { cycle: '2025', wp: 47.8, nonwp: 32.6 },
+            { cycle: '2025', wp: 36.7, nonwp: 29.2 },
         ];
 
-        var isMobile = window.innerWidth <= 480;
+        var wrap = document.getElementById('churn-dumbbell-wrap');
+        var isMobile = wrap ? wrap.offsetWidth <= 480 : window.innerWidth <= 480;
         var W = isMobile ? 340 : 860, H = isMobile ? 380 : 300;
         var ml = isMobile ? 48 : 70, mr = isMobile ? 8 : 30, mt = 12, mb = 15;
         var cycleFontSize = isMobile ? 16 : 16;
         var labelFontSize = isMobile ? 14 : 14;
         var dotR = isMobile ? 9 : 6;
         var barH = 8;
-        var minSep = isMobile ? 36 : 46;
+        var minSep = isMobile ? 50 : 46;
         var plotW = W - ml - mr;
         var plotH = H - mt - mb;
         var rowH = plotH / data.length;
@@ -969,8 +972,8 @@
 
         svg.appendChild(annGroup);
 
-        // ── Mobile annotations (with leader lines) ──
-        if (isMobile) {
+        // ── Mobile annotations (always created; CSS toggles visibility) ──
+        {
             var mAnnGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
             mAnnGroup.setAttribute('class', 'chart-annotations-mobile');
 
@@ -1051,7 +1054,7 @@
         <p>During the 2024 Parliament debate on the fairness of the boundary-drawing process, Minister Chan Chun Sing pushed back at gerrymandering accusations, arguing the premise does not fit Singapore. The Electoral Boundaries Review Committee (EBRC), he said, “does not have access to voting information” and “does not consult the PAP or any other political party.” Its members are senior civil servants, and “party politics do not come into this exercise.”</p>
         <p>More fundamentally, he argued, Singapore lacks the conditions that make gerrymandering effective elsewhere. “Every electoral division is more or less a microcosm of our nation,” he said, pointing to the absence of fixed political or demographic enclaves. About 200,000 voters change their residential address each year, in a population of roughly 2.7 million electors. Add new voters entering the roll each cycle, and this “calls into question any suggestion of the efficacy of attempts at gerrymandering.” Boundary changes, he said, are driven by population shifts and practical considerations rather than past election results.</p>
         <p>Boundary changes may be purely administrative, as the Government maintains. Or they may produce political effects, intended or otherwise, as critics argue. The maps cannot distinguish between the two. What they do show is how uneven the experience is.</p>
-        <p style="text-align:center;margin-top:2.5rem;font-size:0.85rem;letter-spacing:0.3em;color:var(--ink-muted);">&#9830; &#9830; &#9830;</p>
+        <hr style="margin:2.5rem auto 0;border:none;border-top:2px solid var(--ink-muted);width:4rem;">
     </article>
 
     <div class="methodology-box">
@@ -1078,13 +1081,14 @@
                     <li><strong>Boundary precision:</strong> GeoJSON boundaries are simplified representations. Minor discrepancies at the street or building level may exist between these files and actual polling district maps.</li>
                     <li><strong>Land mask:</strong> All boundary files were clipped to the 2025 land boundary before computing the grid cells, churn rates, and change counts. Without this step, older files (particularly 2006, which covered 1,271 km² including territorial sea) would inflate constituency areas and make churn percentages artificially small.</li>
                     <li><strong>SMC/GRC transitions:</strong> When an SMC is absorbed into a GRC (or vice versa), this is counted as a boundary change even if affected residents' polling locations remain similar. One limitation is that name-based detection conflates genuine geographic redrawing (voters moved between constituencies) with administrative renaming (e.g. Moulmein-Kallang GRC becoming Jalan Besar GRC). But the method was used anyway as spatial overlay of consecutive boundary files is the most transparent, reproducible way to measure what actually changed on the ground, even if it occasionally overcounts where names changed but territory didn't.</li>
+                    <li><strong>GRC expansion exclusions:</strong> When a GRC expanded by adding a partner constituency but retained its original name as the leading component (e.g. West Coast GRC → West Coast-Jurong West GRC), this was not counted as a boundary change for the affected area, since the underlying constituency identity was preserved.</li>
                     <li><strong>Resolution mismatch:</strong> Older boundary files (2006, 2011) are digitised at lower resolution (~320 KB) than newer ones (2020, 2025: ~970 KB). This precision difference may create phantom changes along coastlines and polygon edges, slightly affecting change counts in coastal areas, although some more obvious cases were mitigated.</li>
                 </ul>
                 
                 <h3>Tools</h3>
                 <p>Analysis performed using Python with GeoPandas for spatial operations. Map built with Leaflet.js; dumbbell chart built with vanilla JavaScript and SVG.</p>
 
-                <h3>View code on <a href="https://github.com/wongpeiting/electoral_boundaries">GitHub</a>.</h3> 
+                <h3 style="text-align:center;">View code on <a href="https://github.com/wongpeiting/electoral_boundaries">GitHub</a>.</h3>
             </div>
         </details>
     </div>
@@ -1103,8 +1107,8 @@
         var areaMap = {};
         blobData.areas.forEach(function(a) { areaMap[a.id] = a; });
 
-        // Order: Fernvale lands center of row 2 in 4+3 layout
-        var order = ['pioneer', 'springleaf', 'bendemeer', 'geylang', 'siglap', 'fernvale', 'tohguan'];
+        // Order: Fernvale lands center of row 2 in 3+3 layout
+        var order = ['tohguan', 'springleaf', 'geylang', 'siglap', 'fernvale', 'bendemeer'];
 
         order.forEach(function(id) {
             var area = areaMap[id];
@@ -1140,10 +1144,10 @@
 
             var txt = document.createElementNS(svgNS, 'text');
             txt.setAttribute('class', 'area-label');
-            // Place label below the dot, centered horizontally
-            txt.setAttribute('x', area.center[0]);
-            txt.setAttribute('y', area.center[1] + 50);
-            txt.setAttribute('text-anchor', 'middle');
+            // Place label diagonally bottom-right of the dot
+            txt.setAttribute('x', area.center[0] + 20);
+            txt.setAttribute('y', area.center[1] + 45);
+            txt.setAttribute('text-anchor', 'start');
             txt.textContent = area.label;
             svg.appendChild(txt);
 
@@ -1324,5 +1328,4 @@
     });
     </script>
 </body>
-</html>
 </html>
