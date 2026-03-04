@@ -96,7 +96,7 @@ AREAS = [
     },
     {
         "id": "bendemeer",
-        "label": "Bendemeer / Boon Keng",
+        "label": "Novena",
         "center": (103.842, 1.329),
         "districts": {
             2006: "TANJONG PAGAR",
@@ -153,7 +153,7 @@ AREAS = [
     },
     {
         "id": "siglap",
-        "label": "Siglap / Frankel",
+        "label": "Siglap/ Frankel Estate",
         "center": (103.93, 1.317),
         "districts": {
             2006: "EAST COAST",
@@ -172,7 +172,7 @@ AREAS = [
     },
     {
         "id": "tohguan",
-        "label": "Toh Guan",
+        "label": "West Coast/ Faber",
         "center": (103.758, 1.320),
         "districts": {
             2006: "HOLLAND-BUKIT TIMAH",
