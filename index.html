@@ -70,6 +70,7 @@
         .dek {
             font-family: var(--serif);
             font-size: 1.7rem;
+            font-style: italic;
             color: var(--ink-light);
             margin-top: 1rem;
             line-height: 1.5;
@@ -287,6 +288,7 @@
         .prose p {
             font-family: var(--serif);
             font-size: clamp(1.15rem, 2vw, 1.25rem);
+            font-weight: 500;
             line-height: 1.75;
             margin-bottom: 1.5rem;
             color: var(--ink-light);
@@ -619,8 +621,8 @@
             .chart-annotations { display: none; }
             .chart-annotations-mobile { display: block; }
             .chart-subtitle { font-size: 0.9rem; }
-            h1 { font-size: 3.2rem; }
-            .dek { font-size: 1.5rem; }
+            h1 { font-size: 3rem; }
+            .dek { font-size: 1.3rem; }
 
             .map-wrapper { min-height: unset; max-height: unset; height: calc(67vw + 50px); }
 
@@ -967,35 +969,72 @@
 
         svg.appendChild(annGroup);
 
-        // ── Mobile annotations (simpler, no leader lines) ──
+        // ── Mobile annotations (with leader lines) ──
         if (isMobile) {
             var mAnnGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
             mAnnGroup.setAttribute('class', 'chart-annotations-mobile');
 
             var mFontSize = 10;
             var mFill = '#aaa';
+            var mLineStroke = '#ccc';
 
-            // 2011 annotation
-            var m1Y = mt + 0 * rowH + rowH / 2;
-            var m1Text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-            m1Text.setAttribute('x', ml); m1Text.setAttribute('y', m1Y + rowH * 0.48);
-            m1Text.setAttribute('font-family', 'IBM Plex Sans, sans-serif');
-            m1Text.setAttribute('font-size', mFontSize);
-            m1Text.setAttribute('fill', mFill);
-            m1Text.setAttribute('font-style', 'italic');
-            m1Text.textContent = 'Large GRCs resized from 6 to 4\u20135 members';
-            mAnnGroup.appendChild(m1Text);
+            // 2011 annotation — between year and 34.4%, line points to "3" in label
+            var m1Cy = mt + 0 * rowH + rowH / 2;
+            var m1LabelX = x(34.4);
+            // Position text right-aligned, closer to the 34.4% label
+            // "34.4%" label is right-aligned at x(34.4)-4, so its left edge ("3") is ~40px left of that
+            var m1ThreeX = m1LabelX - 44;
+            // Place annotation text well to the left, below the row
+            var m1TextX = ml + 40;
+            var m1TextY = m1Cy + 16;
+            var m1Lines = ['Large GRCs resized', 'from 6 to 4\u20135', 'members'];
+            m1Lines.forEach(function(txt, i) {
+                var t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                t.setAttribute('x', m1TextX);
+                t.setAttribute('y', m1TextY + i * 12);
+                t.setAttribute('font-family', 'IBM Plex Sans, sans-serif');
+                t.setAttribute('font-size', mFontSize);
+                t.setAttribute('fill', mFill);
+                t.setAttribute('font-style', 'italic');
+                t.textContent = txt;
+                mAnnGroup.appendChild(t);
+            });
+            // Line from right end of annotation up to just left of "3", with gaps on both ends
+            var m1Line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            m1Line.setAttribute('x1', m1TextX + 90);
+            m1Line.setAttribute('y1', m1TextY - 6);
+            m1Line.setAttribute('x2', m1ThreeX - 4);
+            m1Line.setAttribute('y2', m1Cy - 6);
+            m1Line.setAttribute('stroke', mLineStroke);
+            m1Line.setAttribute('stroke-width', 0.7);
+            mAnnGroup.appendChild(m1Line);
 
-            // 2020 annotation
-            var m2Y = mt + 2 * rowH + rowH / 2;
-            var m2Text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-            m2Text.setAttribute('x', ml); m2Text.setAttribute('y', m2Y + rowH * 0.48);
-            m2Text.setAttribute('font-family', 'IBM Plex Sans, sans-serif');
-            m2Text.setAttribute('font-size', mFontSize);
-            m2Text.setAttribute('fill', mFill);
-            m2Text.setAttribute('font-style', 'italic');
-            m2Text.textContent = 'Fengshan, Punggol East & Sengkang West dissolved';
-            mAnnGroup.appendChild(m2Text);
+            // 2020 annotation — above and right of "33%", line points down to it
+            var m2Cy = mt + 2 * rowH + rowH / 2;
+            var m2LabelX = x(33.0);
+            // "33%" label is at x(33)+4, y = cy-12
+            var m2TextX = m2LabelX + 35;
+            var m2TextY = m2Cy - 72;
+            var m2Lines = ['Fengshan,', 'Punggol East &', 'Sengkang West', 'dissolved'];
+            m2Lines.forEach(function(txt, i) {
+                var t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                t.setAttribute('x', m2TextX);
+                t.setAttribute('y', m2TextY + i * 12);
+                t.setAttribute('font-family', 'IBM Plex Sans, sans-serif');
+                t.setAttribute('font-size', mFontSize);
+                t.setAttribute('fill', mFill);
+                t.setAttribute('font-style', 'italic');
+                t.textContent = txt;
+                mAnnGroup.appendChild(t);
+            });
+            var m2Line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            m2Line.setAttribute('x1', m2TextX - 6);
+            m2Line.setAttribute('y1', m2TextY + 14);
+            m2Line.setAttribute('x2', m2LabelX + 10);
+            m2Line.setAttribute('y2', m2Cy - 28);
+            m2Line.setAttribute('stroke', mLineStroke);
+            m2Line.setAttribute('stroke-width', 0.7);
+            mAnnGroup.appendChild(m2Line);
 
             svg.appendChild(mAnnGroup);
         }
@@ -1009,7 +1048,7 @@
         <p>Singapore Management University law professor Eugene Tan said the findings stop short of proving gerrymandering, but raise questions. “They suggest that boundary redrawing can do with more clarity, even as the exercise is neither a science nor an art,” said the former Nominated Member of Parliament (NMP).</p>
         <p>Geography may partly explain the pattern, he added. “The Workers’ Party contests in the eastern half of the island. So if there is more churn involving WP-contested wards, it is to be expected,” he said. “With new towns in the western half developing, the non-WP churn will likely increase unless the WP decides to wade into contests in this part of the island.”</p>
         <p>Associate Professor Walter Theseira of the Singapore University of Social Sciences, also a former NMP, suggested a stronger test: whether opposition-contested constituencies are redrawn more often than others experiencing similar population changes. If population change is indeed the driver, similar shifts should not more often trigger boundary changes in opposition-contested areas, especially where margins are close, he said.</p>
-        <p>During the 2024 Parliament debate on the fairness of the boundary-drawing process, Minister Chan Chun Sing pushed back firmly, arguing the premise does not fit Singapore. The Electoral Boundaries Review Committee (EBRC), he said, “does not have access to voting information” and “does not consult the PAP or any other political party.” Its members are senior civil servants, and “party politics do not come into this exercise.”</p>
+        <p>During the 2024 Parliament debate on the fairness of the boundary-drawing process, Minister Chan Chun Sing pushed back at gerrymandering accusations, arguing the premise does not fit Singapore. The Electoral Boundaries Review Committee (EBRC), he said, “does not have access to voting information” and “does not consult the PAP or any other political party.” Its members are senior civil servants, and “party politics do not come into this exercise.”</p>
         <p>More fundamentally, he argued, Singapore lacks the conditions that make gerrymandering effective elsewhere. “Every electoral division is more or less a microcosm of our nation,” he said, pointing to the absence of fixed political or demographic enclaves. About 200,000 voters change their residential address each year, in a population of roughly 2.7 million electors. Add new voters entering the roll each cycle, and this “calls into question any suggestion of the efficacy of attempts at gerrymandering.” Boundary changes, he said, are driven by population shifts and practical considerations rather than past election results.</p>
         <p>Boundary changes may be purely administrative, as the Government maintains. Or they may produce political effects, intended or otherwise, as critics argue. The maps cannot distinguish between the two. What they do show is how uneven the experience is.</p>
         <p style="text-align:center;margin-top:2.5rem;font-size:0.85rem;letter-spacing:0.3em;color:var(--ink-muted);">&#9830; &#9830; &#9830;</p>
