@@ -763,7 +763,7 @@
         ];
 
         var wrap = document.getElementById('churn-dumbbell-wrap');
-        var isMobile = wrap ? wrap.offsetWidth <= 480 : window.innerWidth <= 480;
+        var isMobile = window.matchMedia('(max-width: 480px)').matches;
         var W = isMobile ? 340 : 860, H = isMobile ? 380 : 300;
         var ml = isMobile ? 48 : 70, mr = isMobile ? 8 : 30, mt = 12, mb = 15;
         var cycleFontSize = isMobile ? 16 : 16;
