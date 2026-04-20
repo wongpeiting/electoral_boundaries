@@ -40,7 +40,7 @@ The electoral boundary data was treated with GIS spatial overlay to identify are
 
 ### Contestation analysis
 
-The dumbbell chart compares how much territory was redrawn in WP-contested seats versus non-contested seats after each election. For each constituency in a given election, we calculated the share of its total area that was reassigned to a different constituency in the subsequent boundary review, then averaged across WP-contested and non-contested groups.
+The dumbbell chart compares how much territory was redrawn in WP-contested seats versus non-contested seats after each election. For each constituency in a given election, I calculated the share of its total area that was reassigned to a different constituency in the subsequent boundary review, then averaged across WP-contested and non-contested groups.
 
 ### Additional notes
 
