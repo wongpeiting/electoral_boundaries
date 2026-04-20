@@ -24,13 +24,12 @@
             --accent: #02818a;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; cursor: inherit; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         html, body {
             height: 100%;
             background: var(--paper);
             color: var(--ink);
-            cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cg transform='rotate(135 32 32) translate(0 -1)'%3E%3Crect x='24' y='4' width='16' height='36' rx='1' fill='%23f4c542'/%3E%3Cpolygon points='24,40 40,40 32,55' fill='%23e8b030'/%3E%3Cpolygon points='28,48 36,48 32,55' fill='%23f5e6cb'/%3E%3Cpolygon points='30,52.5 34,52.5 32,57' fill='%231a1918'/%3E%3Crect x='24' y='4' width='16' height='7' rx='1' fill='%23d4574a'/%3E%3Crect x='24' y='11' width='16' height='2.5' fill='%23c4c4c4'/%3E%3C/g%3E%3C/svg%3E") 15 15, auto;
         }
 
         body {
@@ -220,7 +219,6 @@
             font-size: 0.85rem;
             font-weight: 600;
             color: var(--ink-light);
-            cursor: inherit;
             user-select: none;
             list-style: none;
         }
@@ -308,32 +306,61 @@
 
         /* Leaflet container styles removed */
 
-        /* ── Blob scene (scroll-driven opener) ── */
+        /* ── Blob scene (static opener) ── */
         .blob-scene {
-            height: 400vh;
             position: relative;
         }
 
         .blob-stage {
-            position: sticky;
-            top: 0;
-            height: 100vh;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             background: var(--paper);
             overflow: hidden;
-            padding-bottom: 12vh;
+            padding: 1.5rem 1.5rem 1.5rem;
         }
 
-        /* Grid: all 6 blob cells; Fernvale is the hero */
+        .blob-text-block {
+            text-align: center;
+            max-width: 38ch;
+            margin: 4rem 0;
+        }
+
+        .blob-text-block p {
+            font-family: var(--serif);
+            font-size: clamp(1.15rem, 2.5vw, 1.45rem);
+            line-height: 1.55;
+            color: var(--ink);
+            margin-bottom: 0.75rem;
+        }
+
+        .blob-text-block p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Solo Fernvale hero between paragraphs */
+        .blob-hero-wrap {
+            display: flex;
+            justify-content: center;
+            width: 380px;
+            max-width: 90%;
+            margin: 0 auto;
+        }
+        .blob-hero-wrap .area-label {
+            font-size: 24px;
+        }
+        .blob-hero-wrap .blob-cell {
+            width: 100%;
+        }
+
+        /* Grid: all 6 blob cells */
         .blob-grid {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
             gap: 0.4rem 0.8rem;
             max-width: 990px;
-            transition: opacity 0.6s ease;
         }
 
         .blob-cell {
@@ -342,30 +369,6 @@
             overflow: visible;
         }
         .blob-cell svg { width: 100%; display: block; overflow: visible; }
-
-        /* Non-hero cells: hidden initially, fade in on state-grid (delayed after hero shrinks) */
-        .blob-cell:not(.blob-cell--hero) {
-            opacity: 0;
-            transition: opacity 1s ease 0.6s;
-        }
-
-        /* Hero cell (Fernvale): starts scaled up via JS transform */
-        .blob-cell--hero {
-            position: relative;
-            z-index: 2;
-            transition: transform 1.4s cubic-bezier(0.4, 0, 0.2, 1);
-            will-change: transform;
-        }
-
-        /* Hero label + dot: sized for the scaled-up state, transition on shrink */
-        .blob-cell--hero .area-label {
-            font-size: 20px;
-            transition: font-size 1.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .blob-cell--hero .area-dot {
-            r: 5;
-            transition: r 1.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
 
         /* ── SVG element styles ── */
         .morph-blob {
@@ -389,113 +392,6 @@
             fill: #C4453C;
         }
 
-        /* ── Text overlays — pinned to bottom of viewport ── */
-        .blob-intro-text,
-        .blob-intro-text2,
-        .blob-tagline {
-            position: absolute;
-            bottom: 10vh;
-            left: 50%;
-            transform: translateX(-50%) translateY(16px);
-            font-family: var(--serif);
-            font-size: clamp(1.15rem, 2.5vw, 1.45rem);
-            line-height: 1.55;
-            color: var(--ink);
-            text-align: center;
-            max-width: 38ch;
-            opacity: 0;
-            transition: opacity 0.7s ease, transform 0.7s ease;
-            pointer-events: none;
-        }
-
-        /* Intro text visible immediately with the opening blob */
-        .blob-intro-text {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
-        }
-
-        /* ── State transitions ── */
-
-        /* State 1 — Intro: show intro text (also visible by default before scrolling) */
-        .blob-stage.state-intro .blob-intro-text {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
-        }
-
-        /* State 1b — Second intro line */
-        .blob-stage.state-intro2 .blob-intro-text {
-            opacity: 0;
-            transform: translateX(-50%) translateY(16px);
-        }
-        .blob-stage.state-intro2 .blob-intro-text2 {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
-        }
-
-        /* State 2 — Grid: hero shrinks back to grid cell, others appear */
-        .blob-stage.state-grid .blob-cell--hero .area-label {
-            font-size: 34px;
-        }
-        .blob-stage.state-grid .blob-cell--hero .area-dot {
-            r: 8;
-        }
-        .blob-stage.state-grid .blob-cell:not(.blob-cell--hero) {
-            opacity: 1;
-        }
-        .blob-stage.state-grid .blob-intro-text,
-        .blob-stage.state-grid .blob-intro-text2 {
-            opacity: 0;
-            transform: translateX(-50%) translateY(16px);
-            transition-delay: 0.5s;
-        }
-
-        /* State 3 — Tagline: appears with grid, slightly delayed */
-        .blob-stage.state-tagline .blob-tagline {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
-            transition-delay: 0.5s;
-        }
-
-        /* Scroll cue — gentle bobbing chevron, fades on scroll */
-        .scroll-cue {
-            position: absolute;
-            bottom: 3.5vh;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.3rem;
-            opacity: 0.4;
-            transition: opacity 0.5s ease;
-            pointer-events: none;
-        }
-        .scroll-cue::before,
-        .scroll-cue::after {
-            content: '';
-            width: 14px;
-            height: 14px;
-            border-right: 1.5px solid var(--ink-muted);
-            border-bottom: 1.5px solid var(--ink-muted);
-            transform: rotate(45deg);
-        }
-        .scroll-cue::after {
-            margin-top: -10px;
-            opacity: 0.5;
-        }
-        .scroll-cue {
-            animation: cue-bob 2s ease-in-out infinite;
-        }
-        @keyframes cue-bob {
-            0%, 100% { transform: translateX(-50%) translateY(0); }
-            50% { transform: translateX(-50%) translateY(6px); }
-        }
-
-        /* Hide cue once user scrolls */
-        .blob-stage.state-intro .scroll-cue {
-            opacity: 0;
-        }
-
 
         /* ── Responsive ── */
         @media (max-width: 900px) {
@@ -514,7 +410,7 @@
 
         /* ── Chart Sections ── */
         .chart-section {
-            max-width: 960px;
+            max-width: 680px;
             margin: 0 auto;
             padding: 1rem 3rem 1rem;
         }
@@ -586,7 +482,7 @@
 
         .chart-source {
             font-family: var(--sans);
-            font-size: 0.65rem;
+            font-size: 0.8rem;
             color: var(--ink-muted);
             margin-top: 0.5rem;
         }
@@ -628,12 +524,9 @@
             .map-wrapper { min-height: unset; max-height: unset; height: calc(67vw + 50px); }
 
             .blob-cell { width: 140px; }
-            .blob-cell--hero { order: -1; }
             .blob-grid { gap: 0.3rem 1rem; }
             .blob-label { font-size: 0.55rem; }
             .area-label { font-size: 60px; }
-            .blob-cell--hero .area-label { font-size: 36px; }
-            .blob-stage.state-grid .blob-cell--hero .area-label { font-size: 60px; }
             .desktop-only { display: none; }
         }
     </style>
@@ -641,11 +534,17 @@
 <body>
     <div class="blob-scene">
         <div class="blob-stage" id="blob-stage">
+            <div class="blob-text-block">
+                <p>On the map, Fernvale stays still.<br class="desktop-only"> But its electoral boundaries do not.</p>
+            </div>
+            <div class="blob-hero-wrap" id="blob-hero"></div>
+            <div class="blob-text-block">
+                <p>It bounced between Ang Mo Kio GRC and Sengkang West SMC before it was carved out as part of Jalan Kayu SMC, where 2025's tightest fight went down.</p>
+            </div>
+            <div class="blob-text-block" style="margin-top: 4rem;">
+                <p>And it isn't the only one.</p>
+            </div>
             <div class="blob-grid" id="blob-grid"></div>
-            <p class="blob-intro-text" id="blob-intro-text">On the map, Fernvale stays still.<br class="desktop-only"> But its electoral boundaries do not.</p>
-            <p class="blob-intro-text2" id="blob-intro-text2">It bounced between Ang Mo Kio GRC and Sengkang West SMC before it was carved out as part of Jalan Kayu SMC, where 2025's tightest fight went down.</p>
-            <p class="blob-tagline" id="blob-tagline">And it isn't the only one.</p>
-            <div class="scroll-cue" aria-hidden="true"></div>
         </div>
     </div>
 
@@ -711,7 +610,7 @@
                     <span>High (9+)</span>
                 </div>
                 <div class="legend-item">
-                    <div class="legend-swatch" style="background: #67a9cf;"></div>
+                    <div class="legend-swatch" style="background: #7ba5c4;"></div>
                     <span>Medium (5–8)</span>
                 </div>
                 <div class="legend-item">
@@ -743,9 +642,9 @@
     </article>
 
     <div class="chart-section" id="churn-dumbbell-section">
-        <div class="chart-title">After each election, WP-contested seats lost more territory</div>
+        <div class="chart-title">WP-contested seats saw bigger shake-ups each cycle</div>
         <div class="chart-subtitle">Share of area redrawn in the boundary review ahead of each election</div>
-        <div style="display:flex;align-items:center;gap:1rem;margin-bottom:0.5rem;font-family:var(--sans);font-size:0.72rem;">
+        <div style="display:flex;align-items:center;gap:1rem;margin-bottom:0.5rem;font-family:var(--sans);font-size:0.85rem;">
             <span style="display:flex;align-items:center;gap:0.3rem;color:#7A7875;"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#bdbdbd;border:1px solid #999;"></span> Non-WP seats</span>
             <span style="display:flex;align-items:center;gap:0.3rem;color:#08519c;font-weight:500;"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#08519c;border:1px solid #063d73;"></span> WP-contested seats</span>
         </div>
@@ -764,11 +663,11 @@
 
         var wrap = document.getElementById('churn-dumbbell-wrap');
         var isMobile = window.matchMedia('(max-width: 480px)').matches;
-        var W = isMobile ? 340 : 860, H = isMobile ? 380 : 300;
-        var ml = isMobile ? 48 : 70, mr = isMobile ? 8 : 30, mt = 12, mb = 15;
-        var cycleFontSize = isMobile ? 16 : 16;
-        var labelFontSize = isMobile ? 14 : 14;
-        var dotR = isMobile ? 9 : 6;
+        var W = isMobile ? 340 : 680, H = isMobile ? 380 : 460;
+        var ml = isMobile ? 48 : 56, mr = isMobile ? 8 : 20, mt = 12, mb = 15;
+        var cycleFontSize = isMobile ? 16 : 22;
+        var labelFontSize = isMobile ? 14 : 18;
+        var dotR = isMobile ? 9 : 9;
         var barH = 8;
         var minSep = isMobile ? 50 : 46;
         var plotW = W - ml - mr;
@@ -782,8 +681,24 @@
         svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
         svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
 
-
-
+        // Arrowhead marker for swoopy arrows
+        var defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+        var marker = document.createElementNS('http://www.w3.org/2000/svg', 'marker');
+        marker.setAttribute('id', 'swoopy-arrow');
+        marker.setAttribute('viewBox', '0 0 10 10');
+        marker.setAttribute('refX', '10');
+        marker.setAttribute('refY', '5');
+        marker.setAttribute('markerWidth', '6');
+        marker.setAttribute('markerHeight', '6');
+        marker.setAttribute('orient', 'auto');
+        var arrowPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        arrowPath.setAttribute('d', 'M 0 0 L 10 5 L 0 10');
+        arrowPath.setAttribute('fill', 'none');
+        arrowPath.setAttribute('stroke', '#ccc');
+        arrowPath.setAttribute('stroke-width', '1.5');
+        marker.appendChild(arrowPath);
+        defs.appendChild(marker);
+        svg.appendChild(defs);
 
 
         // ── Rows ──
@@ -813,31 +728,6 @@
             svg.appendChild(cycleLabel);
 
 
-
-            // Connecting bar (the gap)
-            var barMinX = x(Math.min(d.wp, d.nonwp));
-            var barMaxX = x(Math.max(d.wp, d.nonwp));
-            var gapBar = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-            gapBar.setAttribute('x', barMinX);
-            gapBar.setAttribute('y', cy - barH / 2);
-            gapBar.setAttribute('width', Math.max(barMaxX - barMinX, 1));
-            gapBar.setAttribute('height', barH);
-            gapBar.setAttribute('rx', 2);
-            // Color intensity by gap size
-            var gapColor = gap < 5 ? 'rgba(8,81,156,0.08)' :
-                           gap < 15 ? 'rgba(8,81,156,0.12)' :
-                           'rgba(8,81,156,0.18)';
-            gapBar.setAttribute('fill', gapColor);
-            svg.appendChild(gapBar);
-
-            // Thin connecting line
-            var connLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-            connLine.setAttribute('x1', x(d.nonwp)); connLine.setAttribute('x2', x(d.wp));
-            connLine.setAttribute('y1', cy); connLine.setAttribute('y2', cy);
-            connLine.setAttribute('stroke', '#08519c');
-            connLine.setAttribute('stroke-width', 1.5);
-            connLine.setAttribute('stroke-opacity', 0.35);
-            svg.appendChild(connLine);
 
             // Non-WP dot (grey)
             var dotNon = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
@@ -903,14 +793,14 @@
         var labelLeftX = labelRightX - 38; // left edge of "34.4%" text
 
         // Annotation text — two lines, right-aligned
-        var annTextX = labelLeftX - 60;
+        var annTextX = labelLeftX - 100;
 
         var annText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         annText.setAttribute('x', annTextX); annText.setAttribute('y', annCy - 5);
         annText.setAttribute('text-anchor', 'end');
         annText.setAttribute('font-family', 'IBM Plex Sans, sans-serif');
         annText.setAttribute('font-size', '14');
-        annText.setAttribute('fill', '#aaa');
+        annText.setAttribute('fill', '#888');
         annText.setAttribute('font-style', 'italic');
         annText.textContent = 'Nearly equal churn as large GRCs';
         annGroup.appendChild(annText);
@@ -920,27 +810,31 @@
         annText2.setAttribute('text-anchor', 'end');
         annText2.setAttribute('font-family', 'IBM Plex Sans, sans-serif');
         annText2.setAttribute('font-size', '14');
-        annText2.setAttribute('fill', '#aaa');
+        annText2.setAttribute('fill', '#888');
         annText2.setAttribute('font-style', 'italic');
         annText2.textContent = 'got resized from 6 to 4\u20135 member';
         annGroup.appendChild(annText2);
 
-        // Horizontal line from text to the "34.4%" label
-        var annLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        annLine.setAttribute('x1', annTextX + 5); annLine.setAttribute('x2', labelLeftX - 3);
-        annLine.setAttribute('y1', annCy); annLine.setAttribute('y2', annCy - 12);
-        annLine.setAttribute('stroke', '#ccc');
-        annLine.setAttribute('stroke-width', 0.7);
-        annGroup.appendChild(annLine);
+        // Swoopy arrow from text to the "34.4%" label
+        var ann1StartX = annTextX + 5, ann1StartY = annCy;
+        var ann1EndX = labelLeftX - 20, ann1EndY = annCy - 16;
+        var ann1CpX = (ann1StartX + ann1EndX) / 2, ann1CpY = ann1StartY + 35;
+        var annArrow = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        annArrow.setAttribute('d', 'M' + ann1StartX + ',' + ann1StartY + ' Q' + ann1CpX + ',' + ann1CpY + ' ' + ann1EndX + ',' + ann1EndY);
+        annArrow.setAttribute('fill', 'none');
+        annArrow.setAttribute('stroke', '#ccc');
+        annArrow.setAttribute('stroke-width', 0.7);
+        annArrow.setAttribute('marker-end', 'url(#swoopy-arrow)');
+        annGroup.appendChild(annArrow);
 
         // ── Annotation: 2020 widest gap ──
         var ann2Cy = mt + 2 * rowH + rowH / 2;   // center of 2020 row (dot y)
         var ann2LabelY = ann2Cy - 12;             // "33%" label baseline
-        var ann2TextX = x(33.0) + 45;
+        var ann2TextX = x(33.0) + 65;
         var ann2LineH = 15;
 
-        // Position text block so bottom line sits 24px above the "33%" label
-        var ann2TextBottomY = ann2LabelY - 24;
+        // Position text block so bottom line sits further above the "33%" label
+        var ann2TextBottomY = ann2LabelY - 40;
         var ann2Lines = [
             'Fengshan, Punggol East',
             '& Sengkang West SMCs',
@@ -953,21 +847,23 @@
             t.setAttribute('text-anchor', 'start');
             t.setAttribute('font-family', 'IBM Plex Sans, sans-serif');
             t.setAttribute('font-size', '14');
-            t.setAttribute('fill', '#aaa');
+            t.setAttribute('fill', '#888');
             t.setAttribute('font-style', 'italic');
             t.textContent = txt;
             annGroup.appendChild(t);
         });
 
-        // Line sits midway between text bottom and "33%" label, equal gaps
-        var ann2Line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        ann2Line.setAttribute('x1', x(33.0) + 14);
-        ann2Line.setAttribute('y1', ann2LabelY - 11);
-        ann2Line.setAttribute('x2', ann2TextX - 8);
-        ann2Line.setAttribute('y2', ann2TextBottomY + 4);
-        ann2Line.setAttribute('stroke', '#ccc');
-        ann2Line.setAttribute('stroke-width', 0.7);
-        annGroup.appendChild(ann2Line);
+        // Swoopy arrow from text to the "33%" label
+        var ann2StartX = ann2TextX - 8, ann2StartY = ann2TextBottomY + 4;
+        var ann2EndX = x(33.0) + 24, ann2EndY = ann2LabelY - 11;
+        var ann2CpX = ann2EndX + 30, ann2CpY = ann2StartY + 15;
+        var ann2Arrow = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        ann2Arrow.setAttribute('d', 'M' + ann2StartX + ',' + ann2StartY + ' Q' + ann2CpX + ',' + ann2CpY + ' ' + ann2EndX + ',' + ann2EndY);
+        ann2Arrow.setAttribute('fill', 'none');
+        ann2Arrow.setAttribute('stroke', '#ccc');
+        ann2Arrow.setAttribute('stroke-width', 0.7);
+        ann2Arrow.setAttribute('marker-end', 'url(#swoopy-arrow)');
+        annGroup.appendChild(ann2Arrow);
 
         svg.appendChild(annGroup);
 
@@ -977,7 +873,7 @@
             mAnnGroup.setAttribute('class', 'chart-annotations-mobile');
 
             var mFontSize = 10;
-            var mFill = '#aaa';
+            var mFill = '#888';
             var mLineStroke = '#ccc';
 
             // 2011 annotation — between year and 34.4%, line points to "3" in label
@@ -1001,15 +897,17 @@
                 t.textContent = txt;
                 mAnnGroup.appendChild(t);
             });
-            // Line from right end of annotation up to just left of "3", with gaps on both ends
-            var m1Line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-            m1Line.setAttribute('x1', m1TextX + 90);
-            m1Line.setAttribute('y1', m1TextY - 6);
-            m1Line.setAttribute('x2', m1ThreeX - 4);
-            m1Line.setAttribute('y2', m1Cy - 6);
-            m1Line.setAttribute('stroke', mLineStroke);
-            m1Line.setAttribute('stroke-width', 0.7);
-            mAnnGroup.appendChild(m1Line);
+            // Swoopy arrow from annotation to label
+            var m1SX = m1TextX + 90, m1SY = m1TextY - 6;
+            var m1EX = m1ThreeX - 4, m1EY = m1Cy - 6;
+            var m1CpX = (m1SX + m1EX) / 2, m1CpY = m1SY + 15;
+            var m1Arrow = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            m1Arrow.setAttribute('d', 'M' + m1SX + ',' + m1SY + ' Q' + m1CpX + ',' + m1CpY + ' ' + m1EX + ',' + m1EY);
+            m1Arrow.setAttribute('fill', 'none');
+            m1Arrow.setAttribute('stroke', mLineStroke);
+            m1Arrow.setAttribute('stroke-width', 0.7);
+            m1Arrow.setAttribute('marker-end', 'url(#swoopy-arrow)');
+            mAnnGroup.appendChild(m1Arrow);
 
             // 2020 annotation — above and right of "33%", line points down to it
             var m2Cy = mt + 2 * rowH + rowH / 2;
@@ -1029,14 +927,16 @@
                 t.textContent = txt;
                 mAnnGroup.appendChild(t);
             });
-            var m2Line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-            m2Line.setAttribute('x1', m2TextX - 6);
-            m2Line.setAttribute('y1', m2TextY + 14);
-            m2Line.setAttribute('x2', m2LabelX + 10);
-            m2Line.setAttribute('y2', m2Cy - 28);
-            m2Line.setAttribute('stroke', mLineStroke);
-            m2Line.setAttribute('stroke-width', 0.7);
-            mAnnGroup.appendChild(m2Line);
+            var m2SX = m2TextX - 6, m2SY = m2TextY + 14;
+            var m2EX = m2LabelX + 10, m2EY = m2Cy - 28;
+            var m2CpX = m2SX - 15, m2CpY = (m2SY + m2EY) / 2;
+            var m2Arrow = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            m2Arrow.setAttribute('d', 'M' + m2SX + ',' + m2SY + ' Q' + m2CpX + ',' + m2CpY + ' ' + m2EX + ',' + m2EY);
+            m2Arrow.setAttribute('fill', 'none');
+            m2Arrow.setAttribute('stroke', mLineStroke);
+            m2Arrow.setAttribute('stroke-width', 0.7);
+            m2Arrow.setAttribute('marker-end', 'url(#swoopy-arrow)');
+            mAnnGroup.appendChild(m2Arrow);
 
             svg.appendChild(mAnnGroup);
         }
@@ -1094,27 +994,25 @@
 
     <script src="scroll_shapes_all.js"></script>
     <script>
-    // ── Scroll-driven blob opener (5-state, single Fernvale element) ──
+    // ── Static blob grid (no scroll hijacking) ──
     (function() {
+        var heroWrap = document.getElementById('blob-hero');
         var grid = document.getElementById('blob-grid');
-        var stage = document.getElementById('blob-stage');
-        var scene = document.querySelector('.blob-scene');
-        if (!grid || !stage || !scene || typeof blobData === 'undefined') return;
+        if (!heroWrap || !grid || typeof blobData === 'undefined') return;
 
         var svgNS = 'http://www.w3.org/2000/svg';
 
         var areaMap = {};
         blobData.areas.forEach(function(a) { areaMap[a.id] = a; });
 
-        // Order: Fernvale lands center of row 2 in 3+3 layout
         var order = ['tohguan', 'springleaf', 'geylang', 'siglap', 'fernvale', 'bendemeer'];
 
-        order.forEach(function(id) {
+        function createCell(id) {
             var area = areaMap[id];
-            if (!area) return;
+            if (!area) return null;
 
             var cell = document.createElement('div');
-            cell.className = 'blob-cell' + (id === 'fernvale' ? ' blob-cell--hero' : '');
+            cell.className = 'blob-cell';
 
             var svg = document.createElementNS(svgNS, 'svg');
             svg.setAttribute('viewBox', '0 0 800 600');
@@ -1137,13 +1035,11 @@
             dot.setAttribute('class', 'area-dot');
             dot.setAttribute('cx', area.center[0]);
             dot.setAttribute('cy', area.center[1]);
-            // Hero dot starts small (CSS transitions it to 8 on state-grid)
-            dot.setAttribute('r', id === 'fernvale' ? '4' : '8');
+            dot.setAttribute('r', '8');
             svg.appendChild(dot);
 
             var txt = document.createElementNS(svgNS, 'text');
             txt.setAttribute('class', 'area-label');
-            // Place label diagonally bottom-right of the dot
             txt.setAttribute('x', area.center[0] + 20);
             txt.setAttribute('y', area.center[1] + 45);
             txt.setAttribute('text-anchor', 'start');
@@ -1151,15 +1047,23 @@
             svg.appendChild(txt);
 
             cell.appendChild(svg);
-            grid.appendChild(cell);
 
-            // Store paths for JS animation
             area._paths = area.shapes.map(function(s) { return s.path; });
+            return cell;
+        }
+
+        // Fernvale solo in the hero spot
+        var heroCell = createCell('fernvale');
+        if (heroCell) heroWrap.appendChild(heroCell);
+
+        // Other 5 in the grid
+        order.forEach(function(id) {
+            if (id === 'fernvale') return;
+            var cell = createCell(id);
+            if (cell) grid.appendChild(cell);
         });
 
-        // ── JS-driven smooth morph: interpolate path coordinates ──
-        // All paths are resampled to 150 vertices, so we can lerp directly.
-
+        // ── Morph animation (still runs, just not scroll-driven) ──
         function parsePath(d) {
             var nums = d.match(/-?\d+\.?\d*/g);
             var coords = [];
@@ -1182,7 +1086,8 @@
         }
 
         var HOLD = 1200, MORPH_MS = 800;
-        order.forEach(function(id) {
+        var allIds = ['fernvale', 'tohguan', 'springleaf', 'geylang', 'siglap', 'bendemeer'];
+        allIds.forEach(function(id) {
             var area = areaMap[id];
             if (!area || !area._paths) return;
             var el = document.getElementById('blob-' + id);
@@ -1218,97 +1123,10 @@
                 requestAnimationFrame(frame);
             }
 
-            // Stagger start
             setTimeout(function() {
                 morphTo((idx + 1) % parsed.length);
             }, HOLD + Math.floor(Math.random() * 800));
         });
-
-        // ── Hero positioning: scale Fernvale cell to fill stage ──
-        var heroCell = grid.querySelector('.blob-cell--hero');
-        var heroTransform = '';
-
-        function computeHeroTransform() {
-            if (!heroCell) return;
-            // Temporarily clear transform to measure natural grid position
-            var prevT = heroCell.style.transform;
-            heroCell.style.transition = 'none';
-            heroCell.style.transform = 'none';
-            void heroCell.offsetHeight; // force reflow
-
-            var cellRect = heroCell.getBoundingClientRect();
-            var stageRect = stage.getBoundingClientRect();
-
-            // Target: 70% of stage width, capped at 620px
-            var targetW = Math.min(stageRect.width * 0.7, 620);
-            var scale = targetW / cellRect.width;
-
-            // Translate red core center → stage center (slightly above middle for text breathing room)
-            // area.center is in SVG coords (viewBox 0 0 800 600); convert to DOM pixels
-            var fernvale = areaMap['fernvale'];
-            var coreX = fernvale ? fernvale.center[0] / 800 : 0.5;
-            var coreY = fernvale ? fernvale.center[1] / 600 : 0.5;
-            var coreDomX = cellRect.left + cellRect.width * coreX;
-            var coreDomY = cellRect.top + cellRect.height * coreY;
-            var dx = (stageRect.left + stageRect.width / 2) - coreDomX;
-            var dy = (stageRect.top + stageRect.height * 0.42) - coreDomY;
-
-            heroTransform = 'translate(' + dx + 'px,' + dy + 'px) scale(' + scale + ')';
-
-            // Restore (don't animate this measurement)
-            heroCell.style.transform = prevT || heroTransform;
-            // Re-enable transition next frame
-            requestAnimationFrame(function() { heroCell.style.transition = ''; });
-        }
-
-        // Initial positioning
-        computeHeroTransform();
-        heroCell.style.transition = 'none';
-        heroCell.style.transform = heroTransform;
-        requestAnimationFrame(function() { heroCell.style.transition = ''; });
-
-        window.addEventListener('resize', function() {
-            computeHeroTransform();
-            if (!stage.classList.contains('state-grid')) {
-                heroCell.style.transform = heroTransform;
-            }
-        });
-
-        // ── Scroll handler — 4 thresholds ──
-        var wasGrid = false;
-
-        function onScroll() {
-            var rect = scene.getBoundingClientRect();
-            var scrollRoom = scene.offsetHeight - window.innerHeight;
-            if (scrollRoom <= 0) return;
-            var progress = Math.max(0, Math.min(1, -rect.top / scrollRoom));
-
-            // State 1a: first intro text (5%–35%)
-            if (progress > 0.05 && progress < 0.35) stage.classList.add('state-intro');
-            else stage.classList.remove('state-intro');
-
-            // State 1b: second intro text (35%–65%)
-            if (progress > 0.35 && progress < 0.65) stage.classList.add('state-intro2');
-            else stage.classList.remove('state-intro2');
-
-            // State 2: grid (65%+) — hero shrinks to grid cell, others appear
-            var isGrid = progress > 0.65;
-            if (isGrid && !wasGrid) {
-                stage.classList.add('state-grid');
-                heroCell.style.transform = 'none';
-            } else if (!isGrid && wasGrid) {
-                stage.classList.remove('state-grid');
-                heroCell.style.transform = heroTransform;
-            }
-            wasGrid = isGrid;
-
-            // State 3: tagline appears with the grid
-            if (isGrid) stage.classList.add('state-tagline');
-            else stage.classList.remove('state-tagline');
-        }
-
-        window.addEventListener('scroll', onScroll, { passive: true });
-        onScroll();
     })();
     </script>
 
